@@ -1,9 +1,7 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  experimental: {
-    serverActions: { allowedOrigins: ['localhost:3000'] },
-  },
+  // serverActions is now stable, no need for experimental flag
 };
 
 export default nextConfig;

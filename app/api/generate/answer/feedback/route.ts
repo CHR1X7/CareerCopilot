@@ -1,26 +1,16 @@
-import { auth } from '@clerk/nextjs'
+import { auth } from '@clerk/nextjs/server'
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId } = auth()
+    const { userId } = await auth()
     if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-    const { answer_id, feedback, edited_answer } = await req.json()
+    const { analysis_id, feedback } = await req.json()
 
-    const updates: any = {}
-    if (feedback !== undefined) updates.feedback = feedback
-    if (edited_answer !== undefined) updates.user_edited_answer = edited_answer
-
-    const { error } = await supabaseAdmin
-      .from('generated_answers')
-      .update(updates)
-      .eq('id', answer_id)
-
-    if (error) throw error
     return NextResponse.json({ success: true })
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+  } catch (err) {
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
