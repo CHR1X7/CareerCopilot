@@ -11,19 +11,23 @@ export const metadata: Metadata = {
   description: 'Your AI-powered co-pilot to land your dream job',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <ClerkProvider
-      afterSignOutUrl="/sign-in"
+      afterSignOutUrl="/"
+      signInUrl="/sign-in"
+      signUpUrl="/sign-up"
     >
-      <html lang="en" className="dark">
-        <body className={`${inter.className} bg-gray-950 text-white antialiased`}>
+      <html lang="en">
+        <body
+          className={`${inter.className} bg-gray-950 text-white antialiased`}
+        >
           {children}
-          <Toaster
-            position="top-right"
-            theme="dark"
-            richColors
-          />
+          <Toaster position="top-right" theme="dark" richColors />
         </body>
       </html>
     </ClerkProvider>
