@@ -8,39 +8,26 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  let userId: string | null = null;
-
-  try {
-    const authResult = await auth();
-    userId = authResult.userId;
-  } catch (err) {
-    console.error('[Layout] Auth error:', err);
-    redirect('/sign-in');
-  }
+  const { userId } = await auth();
 
   if (!userId) {
     redirect('/sign-in');
   }
 
+  // Check onboarding — never crash, just redirect
   try {
-    const { data: profile, error } = await supabaseAdmin
+    const { data: profile } = await supabaseAdmin
       .from('user_profiles')
       .select('onboarding_completed')
       .eq('clerk_user_id', userId)
       .single();
 
-    if (error && error.code !== 'PGRST116') {
-      // PGRST116 = row not found, that's fine (new user)
-      console.error('[Layout] Supabase error:', error);
-      // Don't crash — just send to onboarding
-    }
-
     if (!profile?.onboarding_completed) {
       redirect('/onboarding');
     }
   } catch (err) {
-    console.error('[Layout] Profile check error:', err);
-    // If supabase fails, send to onboarding rather than crashing
+    // If DB fails, send to onboarding
+    console.error('[Dashboard Layout] DB error:', err);
     redirect('/onboarding');
   }
 
