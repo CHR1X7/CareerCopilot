@@ -40,36 +40,58 @@ export default function ResumeAnalyzerPage() {
     },
   });
 
-  const handleAnalyze = async () => {
-    if (!resumeText.trim() || !jobDescription.trim()) {
-      toast.error('Please provide both your resume and a job description');
+const handleAnalyze = async () => {
+  if (!resumeText.trim() || !jobDescription.trim()) {
+    toast.error('Please provide both your resume and a job description');
+    return;
+  }
+
+  if (resumeText.trim().length < 50) {
+    toast.error('Resume text is too short — please paste more content');
+    return;
+  }
+
+  if (jobDescription.trim().length < 50) {
+    toast.error('Job description is too short — please paste more content');
+    return;
+  }
+
+  setLoading(true);
+  setAnalysis(null);
+  setFeedback(null);
+
+  try {
+    const res = await fetch('/api/resume/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        resume_text: resumeText,
+        job_description: jobDescription,
+      }),
+    });
+
+    const data = await res.json();
+    console.log('[Resume Analyzer] Response:', data);
+
+    if (!res.ok) {
+      // Show the actual error from the server
+      toast.error(data.error || `Server error: ${res.status}`);
       return;
     }
 
-    setLoading(true);
-    setAnalysis(null);
-    setFeedback(null);
-
-    try {
-      const res = await fetch('/api/resume/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ resume_text: resumeText, job_description: jobDescription }),
-      });
-
-      const data = await res.json();
-      if (data.analysis) {
-        setAnalysis(data.analysis);
-        toast.success('Analysis complete!');
-      } else {
-        throw new Error(data.error);
-      }
-    } catch (err) {
-      toast.error('Analysis failed. Please try again.');
-    } finally {
-      setLoading(false);
+    if (data.analysis) {
+      setAnalysis(data.analysis);
+      toast.success('Analysis complete!');
+    } else {
+      toast.error('No analysis returned. Please try again.');
     }
-  };
+  } catch (err: any) {
+    console.error('[Resume Analyzer] Fetch error:', err);
+    toast.error(`Network error: ${err?.message || 'Please check your connection'}`);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const priorityColors = {
     high: 'danger' as const,
