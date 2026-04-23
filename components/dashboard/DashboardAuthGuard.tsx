@@ -11,42 +11,37 @@ export default function DashboardAuthGuard({
 }) {
   const { userId, isLoaded } = useAuth();
   const router = useRouter();
-  const [profileChecked, setProfileChecked] = useState(false);
   const [isAuthorized, setIsAuthorized] = useState(false);
 
   useEffect(() => {
     if (!isLoaded) return;
 
     if (!userId) {
-      router.replace('/sign-in');
+      window.location.href = '/sign-in';
       return;
     }
 
-    // Check onboarding status
     const checkProfile = async () => {
       try {
         const res = await fetch('/api/users');
         const data = await res.json();
 
         if (!data.profile || !data.profile.onboarding_completed) {
-          router.replace('/onboarding');
+          window.location.href = '/onboarding';
           return;
         }
 
         setIsAuthorized(true);
       } catch (err) {
         console.error('Profile check failed:', err);
-        router.replace('/onboarding');
-      } finally {
-        setProfileChecked(true);
+        window.location.href = '/onboarding';
       }
     };
 
     checkProfile();
-  }, [userId, isLoaded, router]);
+  }, [userId, isLoaded]);
 
-  // Loading state
-  if (!isLoaded || !profileChecked || !isAuthorized) {
+  if (!isLoaded || !isAuthorized) {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
         <div className="text-center">

@@ -18,17 +18,18 @@ export default function OnboardingPage() {
       return;
     }
 
-    // Check if already onboarded
     const check = async () => {
       try {
         const res = await fetch('/api/users');
         const data = await res.json();
-        if (data.profile?.onboarding_completed) {
-          router.replace('/dashboard');
+
+        // If already completed onboarding go to dashboard
+        if (data.profile?.onboarding_completed === true) {
+          window.location.href = '/dashboard';
           return;
         }
       } catch {
-        // No profile = needs onboarding
+        // No profile yet = needs onboarding
       }
       setReady(true);
     };
