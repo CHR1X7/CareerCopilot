@@ -1,29 +1,60 @@
-import { auth } from '@clerk/nextjs/server';
-import { redirect } from 'next/navigation';
-import { supabaseAdmin } from '@/lib/supabase';
+'use client';
+
+import { useAuth } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import OnboardingWizard from '@/components/onboarding/OnboardingWizard';
 
-export default async function OnboardingPage() {
-  const { userId } = await auth();
+export default function OnboardingPage() {
+  const { userId, isLoaded } = useAuth();
+  const router = useRouter();
+  const [ready, setReady] = useState(false);
 
-  if (!userId) {
-    redirect('/sign-in');
-  }
+  useEffect(() => {
+    if (!isLoaded) return;
 
-  // If already completed onboarding, go to dashboard
-  try {
-    const { data: profile } = await supabaseAdmin
-      .from('user_profiles')
-      .select('onboarding_completed')
-      .eq('clerk_user_id', userId)
-      .single();
-
-    if (profile?.onboarding_completed) {
-      redirect('/dashboard');
+    if (!userId) {
+      router.replace('/sign-in');
+      return;
     }
-  } catch (err) {
-    // No profile yet = needs onboarding, continue
-    console.error('[Onboarding] DB check error:', err);
+
+    // Check if already onboarded
+    const check = async () => {
+      try {
+        const res = await fetch('/api/users');
+        const data = await res.json();
+        if (data.profile?.onboarding_completed) {
+          router.replace('/dashboard');
+          return;
+        }
+      } catch {
+        // No profile = needs onboarding
+      }
+      setReady(true);
+    };
+
+    check();
+  }, [userId, isLoaded, router]);
+
+  if (!isLoaded || !ready) {
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="flex items-center gap-2">
+          <div
+            className="w-3 h-3 bg-violet-500 rounded-full animate-bounce"
+            style={{ animationDelay: '0ms' }}
+          />
+          <div
+            className="w-3 h-3 bg-violet-500 rounded-full animate-bounce"
+            style={{ animationDelay: '150ms' }}
+          />
+          <div
+            className="w-3 h-3 bg-violet-500 rounded-full animate-bounce"
+            style={{ animationDelay: '300ms' }}
+          />
+        </div>
+      </div>
+    );
   }
 
   return <OnboardingWizard />;

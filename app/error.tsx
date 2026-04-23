@@ -22,10 +22,10 @@ export default function Error({
           Something went wrong
         </h2>
         <p className="text-gray-400 mb-2 text-sm">
-          {error.message || 'An unexpected error occurred'}
+          {error?.message || 'An unexpected error occurred'}
         </p>
-        {error.digest && (
-          <p className="text-gray-600 text-xs mb-6">
+        {error?.digest && (
+          <p className="text-gray-600 text-xs mb-6 font-mono bg-gray-900 px-3 py-2 rounded-lg">
             Error ID: {error.digest}
           </p>
         )}

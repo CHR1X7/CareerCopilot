@@ -11,11 +11,39 @@ import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 
 export default function DashboardPage() {
-  const { user } = useUser();
-  const { applications, loading } = useApplications();
-  const { profile } = useProfile();
+  const { user, isLoaded } = useUser();
+  const { applications, loading: appsLoading } = useApplications();
+  const { profile, loading: profileLoading } = useProfile();
 
-  const firstName = user?.firstName || profile?.full_name?.split(' ')[0] || 'there';
+  const loading = !isLoaded || profileLoading;
+  const firstName =
+    user?.firstName ||
+    profile?.full_name?.split(' ')[0] ||
+    'there';
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <div
+              className="w-3 h-3 bg-violet-500 rounded-full animate-bounce"
+              style={{ animationDelay: '0ms' }}
+            />
+            <div
+              className="w-3 h-3 bg-violet-500 rounded-full animate-bounce"
+              style={{ animationDelay: '150ms' }}
+            />
+            <div
+              className="w-3 h-3 bg-violet-500 rounded-full animate-bounce"
+              style={{ animationDelay: '300ms' }}
+            />
+          </div>
+          <p className="text-gray-400 text-sm">Loading your dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -26,17 +54,20 @@ export default function DashboardPage() {
           animate={{ opacity: 1, y: 0 }}
         >
           <h1 className="text-3xl font-bold text-white">
-            Good morning, <span className="gradient-text">{firstName}</span> 👋
+            Good morning,{' '}
+            <span className="gradient-text">{firstName}</span> 👋
           </h1>
-          <p className="text-gray-400 mt-1">Here's your job search overview</p>
+          <p className="text-gray-400 mt-1">
+            Here's your job search overview
+          </p>
         </motion.div>
       </div>
 
       {/* Stats */}
-      <StatsOverview applications={applications} loading={loading} />
+      <StatsOverview applications={applications} loading={appsLoading} />
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-3 gap-4 my-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-8">
         {[
           {
             icon: '📊',
@@ -82,12 +113,19 @@ export default function DashboardPage() {
       {/* Pipeline */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-white">Application Pipeline</h2>
+          <h2 className="text-xl font-bold text-white">
+            Application Pipeline
+          </h2>
           <Link href="/applications">
-            <Button variant="ghost" size="sm">View all →</Button>
+            <Button variant="ghost" size="sm">
+              View all →
+            </Button>
           </Link>
         </div>
-        <ApplicationPipeline applications={applications.slice(0, 5)} loading={loading} />
+        <ApplicationPipeline
+          applications={applications.slice(0, 5)}
+          loading={appsLoading}
+        />
       </div>
 
       {/* AI Tips */}
@@ -99,8 +137,10 @@ export default function DashboardPage() {
           <div className="flex-1">
             <h3 className="font-bold text-white mb-1">AI Tip of the Day</h3>
             <p className="text-gray-400 text-sm">
-              Tailor your resume for each application. Our Resume Analyzer shows you exactly what keywords to add 
-              to increase your match score by up to 40%. Jobs with 80%+ match scores have 3x higher callback rates.
+              Tailor your resume for each application. Our Resume Analyzer
+              shows you exactly what keywords to add to increase your match
+              score by up to 40%. Jobs with 80%+ match scores have 3x higher
+              callback rates.
             </p>
           </div>
         </div>
