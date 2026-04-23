@@ -3,8 +3,19 @@ import { redirect } from 'next/navigation';
 import OnboardingWizard from '@/components/onboarding/OnboardingWizard';
 
 export default async function OnboardingPage() {
-  const { userId } = await auth();
-  if (!userId) redirect('/sign-in');
+  let userId: string | null = null;
+
+  try {
+    const authResult = await auth();
+    userId = authResult.userId;
+  } catch (err) {
+    console.error('[Onboarding] Auth error:', err);
+    redirect('/sign-in');
+  }
+
+  if (!userId) {
+    redirect('/sign-in');
+  }
 
   return <OnboardingWizard />;
 }
