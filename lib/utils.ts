@@ -9,9 +9,30 @@ export function generateId(): string {
   return Math.random().toString(36).substring(2) + Date.now().toString(36);
 }
 
-export function formatDate(date: string): string {
+// ✅ Now accepts string | undefined | null
+export function formatDate(date: string | undefined | null): string {
   if (!date) return 'Present';
-  return new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+  try {
+    return new Date(date).toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'short' 
+    });
+  } catch {
+    return 'Present';
+  }
+}
+
+export function formatDateTime(date: string | undefined | null): string {
+  if (!date) return '—';
+  try {
+    return new Date(date).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  } catch {
+    return '—';
+  }
 }
 
 export function getScoreColor(score: number): string {

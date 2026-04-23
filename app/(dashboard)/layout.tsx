@@ -3,18 +3,23 @@ import { redirect } from 'next/navigation';
 import { supabaseAdmin } from '@/lib/supabase';
 import Sidebar from '@/components/dashboard/Sidebar';
 
-export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default async function DashboardLayout({ 
+  children 
+}: { 
+  children: React.ReactNode 
+}) {
   const { userId } = await auth();
   if (!userId) redirect('/sign-in');
 
-  // Check onboarding
+  // Check onboarding completion
   const { data: profile } = await supabaseAdmin
     .from('user_profiles')
     .select('onboarding_completed')
     .eq('clerk_user_id', userId)
     .single();
 
-  // Redirect to onboarding if not completed (but not if already going there)
+  // Only redirect if onboarding not completed
+  // Onboarding page is outside this layout so no infinite loop
   if (!profile?.onboarding_completed) {
     redirect('/onboarding');
   }
