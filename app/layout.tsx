@@ -21,8 +21,6 @@ export default function RootLayout({
       afterSignOutUrl="/"
       signInUrl="/sign-in"
       signUpUrl="/sign-up"
-      afterSignInUrl="/dashboard"
-      afterSignUpUrl="/onboarding"
     >
       <html lang="en">
         <body

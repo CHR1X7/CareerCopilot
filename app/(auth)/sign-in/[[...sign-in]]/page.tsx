@@ -3,13 +3,11 @@ import { SignIn } from '@clerk/nextjs';
 export default function SignInPage() {
   return (
     <div className="min-h-screen bg-gray-950 flex items-center justify-center relative overflow-hidden">
-      {/* Background effects */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-violet-600/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-600/10 rounded-full blur-3xl" />
       </div>
 
-      {/* Logo */}
       <div className="absolute top-8 left-8 flex items-center gap-2">
         <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-cyan-500 rounded-lg flex items-center justify-center">
           <span className="text-white font-bold text-sm">CC</span>
@@ -20,7 +18,6 @@ export default function SignInPage() {
       <div className="relative z-10">
         <SignIn
           forceRedirectUrl="/dashboard"
-          fallbackRedirectUrl="/dashboard"
           appearance={{
             elements: {
               rootBox: 'mx-auto',
