@@ -8,20 +8,6 @@ CareerCopilot uses AI to analyze resumes, generate tailored answers, scout real 
 
 ---
 
-## 📸 Screenshots
-
-| Landing Page | Dashboard |
-|:---:|:---:|
-| ![Landing](https://via.placeholder.com/600x340/f8faff/6c5ce7?text=Landing+Page) | ![Dashboard](https://via.placeholder.com/600x340/f8faff/6c5ce7?text=Dashboard) |
-
-| Resume Analyzer | Job Scout |
-|:---:|:---:|
-| ![Analyzer](https://via.placeholder.com/600x340/f8faff/6c5ce7?text=Resume+Analyzer) | ![Scout](https://via.placeholder.com/600x340/f8faff/6c5ce7?text=Job+Scout) |
-
-> Replace these placeholder images with actual screenshots of your app.
-
----
-
 ## ✨ Features
 
 ### 🔍 Resume Analyzer
