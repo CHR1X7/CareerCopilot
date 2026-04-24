@@ -1,7 +1,6 @@
 'use client';
 
 import { useUser } from '@clerk/nextjs';
-import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useApplications } from '@/hooks/useApplications';
 import { useProfile } from '@/hooks/useProfile';
@@ -17,108 +16,123 @@ export default function DashboardPage() {
 
   const loading = !isLoaded || profileLoading;
   const firstName =
-    user?.firstName ||
-    profile?.full_name?.split(' ')[0] ||
-    'there';
+    user?.firstName || profile?.full_name?.split(' ')[0] || 'there';
+
+  const hour = new Date().getHours();
+  const greeting =
+    hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <div
-              className="w-3 h-3 bg-violet-500 rounded-full animate-bounce"
-              style={{ animationDelay: '0ms' }}
-            />
-            <div
-              className="w-3 h-3 bg-violet-500 rounded-full animate-bounce"
-              style={{ animationDelay: '150ms' }}
-            />
-            <div
-              className="w-3 h-3 bg-violet-500 rounded-full animate-bounce"
-              style={{ animationDelay: '300ms' }}
-            />
-          </div>
-          <p className="text-gray-400 text-sm">Loading your dashboard...</p>
+      <div className="space-y-6 animate-fade-in">
+        <div className="skeleton h-10 w-72 rounded-xl" />
+        <div className="skeleton h-5 w-48 rounded-lg" />
+        <div className="grid grid-cols-4 gap-3">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="skeleton h-28 rounded-2xl" />
+          ))}
         </div>
       </div>
     );
   }
 
   return (
-    <div>
+    <div className="space-y-8 animate-fade-in">
       {/* Header */}
-      <div className="mb-8">
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <h1 className="text-3xl font-bold text-white">
-            Good morning,{' '}
-            <span className="gradient-text">{firstName}</span> 👋
-          </h1>
-          <p className="text-gray-400 mt-1">
-            Here's your job search overview
-          </p>
-        </motion.div>
+      <div>
+        <h1 className="text-2xl font-bold text-text-primary tracking-tight">
+          {greeting},{' '}
+          <span className="gradient-text-brand">{firstName}</span>
+        </h1>
+        <p className="text-sm text-text-tertiary mt-1">
+          Here's your job search at a glance
+        </p>
       </div>
 
       {/* Stats */}
       <StatsOverview applications={applications} loading={appsLoading} />
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-8">
-        {[
-          {
-            icon: '📊',
-            title: 'Resume Analyzer',
-            desc: 'Check your resume match score',
-            href: '/resume-analyzer',
-            gradient: 'from-violet-600/20 to-purple-600/20',
-            border: 'border-violet-500/30',
-          },
-          {
-            icon: '✍️',
-            title: 'Answer Generator',
-            desc: 'Generate tailored answers',
-            href: '/answer-generator',
-            gradient: 'from-cyan-600/20 to-blue-600/20',
-            border: 'border-cyan-500/30',
-          },
-          {
-            icon: '📋',
-            title: 'Track Application',
-            desc: 'Add a new application',
-            href: '/applications',
-            gradient: 'from-emerald-600/20 to-green-600/20',
-            border: 'border-emerald-500/30',
-          },
-        ].map((action, i) => (
-          <Link key={i} href={action.href}>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              whileHover={{ y: -4 }}
-              className={`p-5 rounded-2xl bg-gradient-to-br ${action.gradient} border ${action.border} cursor-pointer transition-all`}
-            >
-              <div className="text-3xl mb-3">{action.icon}</div>
-              <div className="font-semibold text-white">{action.title}</div>
-              <div className="text-sm text-gray-400 mt-1">{action.desc}</div>
-            </motion.div>
-          </Link>
-        ))}
+      <div>
+        <h2 className="text-sm font-semibold text-text-secondary mb-3">
+          Quick Actions
+        </h2>
+        <div className="grid grid-cols-3 gap-3">
+          {[
+            {
+              title: 'Analyze Resume',
+              desc: 'Get your match score',
+              href: '/resume-analyzer',
+              color: 'text-brand-400',
+              bg: 'bg-brand-500/8',
+              border: 'border-brand-500/10',
+              icon: (
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 7V5a2 2 0 0 1 2-2h2" /><path d="M17 3h2a2 2 0 0 1 2 2v2" />
+                  <path d="M21 17v2a2 2 0 0 1-2 2h-2" /><path d="M7 21H5a2 2 0 0 1-2-2v-2" />
+                  <path d="M7 8h10" /><path d="M7 12h10" /><path d="M7 16h10" />
+                </svg>
+              ),
+            },
+            {
+              title: 'Generate Answers',
+              desc: 'AI-tailored responses',
+              href: '/answer-generator',
+              color: 'text-accent-sky',
+              bg: 'bg-sky-500/8',
+              border: 'border-sky-500/10',
+              icon: (
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                  <path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" />
+                </svg>
+              ),
+            },
+            {
+              title: 'Track Application',
+              desc: 'Add new application',
+              href: '/applications',
+              color: 'text-accent-emerald',
+              bg: 'bg-emerald-500/8',
+              border: 'border-emerald-500/10',
+              icon: (
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z" />
+                  <path d="m2 12 8.58 3.91a2 2 0 0 0 1.66 0L21 12" />
+                  <path d="m2 17 8.58 3.91a2 2 0 0 0 1.66 0L21 17" />
+                </svg>
+              ),
+            },
+          ].map((action, i) => (
+            <Link key={i} href={action.href}>
+              <div
+                className={`surface-interactive rounded-2xl p-4 h-full ${action.bg} ${action.border} group`}
+              >
+                <div className={`${action.color} mb-3`}>{action.icon}</div>
+                <div className="text-[13px] font-semibold text-text-primary">
+                  {action.title}
+                </div>
+                <div className="text-[12px] text-text-muted mt-0.5">
+                  {action.desc}
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
 
       {/* Pipeline */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-white">
-            Application Pipeline
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-sm font-semibold text-text-secondary">
+            Recent Applications
           </h2>
           <Link href="/applications">
-            <Button variant="ghost" size="sm">
-              View all →
+            <Button variant="ghost" size="xs">
+              View all
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m9 18 6-6-6-6" />
+              </svg>
             </Button>
           </Link>
         </div>
@@ -128,19 +142,25 @@ export default function DashboardPage() {
         />
       </div>
 
-      {/* AI Tips */}
-      <Card className="bg-gradient-to-br from-violet-900/20 to-cyan-900/20 border-violet-500/20">
+      {/* Insight Card */}
+      <Card
+        variant="default"
+        className="bg-gradient-to-br from-brand-600/[0.04] to-sky-600/[0.04] border-brand-500/10"
+      >
         <div className="flex items-start gap-4">
-          <div className="w-12 h-12 bg-gradient-to-br from-violet-500 to-cyan-500 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">
-            🤖
+          <div className="w-10 h-10 rounded-xl gradient-brand flex items-center justify-center flex-shrink-0">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+            </svg>
           </div>
-          <div className="flex-1">
-            <h3 className="font-bold text-white mb-1">AI Tip of the Day</h3>
-            <p className="text-gray-400 text-sm">
-              Tailor your resume for each application. Our Resume Analyzer
-              shows you exactly what keywords to add to increase your match
-              score by up to 40%. Jobs with 80%+ match scores have 3x higher
-              callback rates.
+          <div className="flex-1 min-w-0">
+            <h3 className="text-[13px] font-semibold text-text-primary mb-1">
+              Pro tip
+            </h3>
+            <p className="text-[12px] text-text-tertiary leading-relaxed">
+              Candidates who tailor their resume for each application have a 3x
+              higher callback rate. Use the Resume Analyzer to check your match
+              score before applying.
             </p>
           </div>
         </div>

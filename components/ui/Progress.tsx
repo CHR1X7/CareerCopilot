@@ -1,34 +1,75 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 
 interface ProgressProps {
   value: number;
   max?: number;
   className?: string;
-  barClassName?: string;
-  showLabel?: boolean;
   size?: 'sm' | 'md' | 'lg';
+  variant?: 'brand' | 'success' | 'warning' | 'danger';
+  showValue?: boolean;
+  animated?: boolean;
 }
 
-export default function Progress({ value, max = 100, className, barClassName, showLabel, size = 'md' }: ProgressProps) {
+export default function Progress({
+  value,
+  max = 100,
+  className,
+  size = 'md',
+  variant = 'brand',
+  showValue,
+  animated = true,
+}: ProgressProps) {
+  const [width, setWidth] = useState(0);
   const percentage = Math.min((value / max) * 100, 100);
 
-  const heights = { sm: 'h-1.5', md: 'h-2.5', lg: 'h-4' };
+  useEffect(() => {
+    if (animated) {
+      const timer = setTimeout(() => setWidth(percentage), 100);
+      return () => clearTimeout(timer);
+    }
+    setWidth(percentage);
+  }, [percentage, animated]);
+
+  const heights = { sm: 'h-1', md: 'h-1.5', lg: 'h-2.5' };
+
+  const barVariants = {
+    brand: 'bg-brand-500',
+    success: 'bg-accent-emerald',
+    warning: 'bg-accent-amber',
+    danger: 'bg-accent-rose',
+  };
+
+  const bgVariants = {
+    brand: 'bg-brand-500/10',
+    success: 'bg-emerald-500/10',
+    warning: 'bg-amber-500/10',
+    danger: 'bg-rose-500/10',
+  };
 
   return (
-    <div className={cn('w-full', className)}>
-      <div className={cn('w-full bg-gray-800 rounded-full overflow-hidden', heights[size])}>
-        <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: `${percentage}%` }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-          className={cn('h-full rounded-full', barClassName || 'bg-gradient-to-r from-violet-500 to-cyan-500')}
+    <div className={cn('w-full flex items-center gap-3', className)}>
+      <div
+        className={cn(
+          'w-full rounded-full overflow-hidden',
+          heights[size],
+          bgVariants[variant]
+        )}
+      >
+        <div
+          className={cn(
+            'h-full rounded-full transition-all duration-700 ease-out',
+            barVariants[variant]
+          )}
+          style={{ width: `${width}%` }}
         />
       </div>
-      {showLabel && (
-        <span className="text-xs text-gray-400 mt-1">{Math.round(percentage)}%</span>
+      {showValue && (
+        <span className="text-xs font-mono text-text-tertiary tabular-nums min-w-[3ch]">
+          {Math.round(percentage)}%
+        </span>
       )}
     </div>
   );

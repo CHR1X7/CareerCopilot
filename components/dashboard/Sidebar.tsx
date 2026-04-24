@@ -4,80 +4,186 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { UserButton } from '@clerk/nextjs';
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
 
 const NAV_ITEMS = [
-  { href: '/dashboard', icon: '🏠', label: 'Dashboard' },
-  { href: '/resume-analyzer', icon: '📊', label: 'Resume Analyzer' },
-  { href: '/answer-generator', icon: '✍️', label: 'Answer Generator' },
-  { href: '/applications', icon: '📋', label: 'Applications' },
-  { href: '/profile', icon: '👤', label: 'My Profile' },
+  { href: '/dashboard', icon: 'home', label: 'Home' },
+  { href: '/resume-analyzer', icon: 'scan', label: 'Resume Analyzer' },
+  { href: '/answer-generator', icon: 'pen', label: 'Answer Generator' },
+  { href: '/applications', icon: 'layers', label: 'Applications' },
+  { href: '/profile', icon: 'user', label: 'Profile' },
 ];
+
+const icons: Record<string, React.ReactNode> = {
+  home: (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+      <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+    </svg>
+  ),
+  scan: (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M3 7V5a2 2 0 0 1 2-2h2" />
+      <path d="M17 3h2a2 2 0 0 1 2 2v2" />
+      <path d="M21 17v2a2 2 0 0 1-2 2h-2" />
+      <path d="M7 21H5a2 2 0 0 1-2-2v-2" />
+      <path d="M7 8h10" />
+      <path d="M7 12h10" />
+      <path d="M7 16h10" />
+    </svg>
+  ),
+  pen: (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+      <path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" />
+    </svg>
+  ),
+  layers: (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z" />
+      <path d="m2 12 8.58 3.91a2 2 0 0 0 1.66 0L21 12" />
+      <path d="m2 17 8.58 3.91a2 2 0 0 0 1.66 0L21 17" />
+    </svg>
+  ),
+  user: (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="8" r="5" />
+      <path d="M20 21a8 8 0 0 0-16 0" />
+    </svg>
+  ),
+};
 
 export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 bg-gray-900/80 border-r border-gray-800 flex flex-col">
+    <aside className="w-[260px] bg-surface-50 border-r border-border-subtle flex flex-col">
       {/* Logo */}
-      <div className="p-6 border-b border-gray-800">
+      <div className="h-16 flex items-center px-5 border-b border-border-subtle">
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 bg-gradient-to-br from-violet-500 to-cyan-500 rounded-xl flex items-center justify-center text-white font-bold text-sm animate-pulse-glow">
-            CC
+          <div className="w-8 h-8 gradient-brand rounded-lg flex items-center justify-center">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M12 2 2 7l10 5 10-5-10-5Z" />
+              <path d="m2 17 10 5 10-5" />
+              <path d="m2 12 10 5 10-5" />
+            </svg>
           </div>
           <div>
-            <div className="font-bold text-white text-sm">CareerCopilot</div>
-            <div className="text-xs text-gray-500">AI Job Assistant</div>
+            <div className="text-[13px] font-semibold text-text-primary tracking-tight">
+              CareerCopilot
+            </div>
+            <div className="text-[10px] text-text-muted font-medium tracking-wide uppercase">
+              AI Assistant
+            </div>
           </div>
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-1">
-        <p className="text-xs font-semibold text-gray-600 uppercase tracking-wider px-3 mb-3">
-          Main Menu
-        </p>
+      <nav className="flex-1 p-3 space-y-0.5">
+        <div className="px-3 pt-2 pb-2.5">
+          <span className="text-[10px] font-semibold text-text-muted uppercase tracking-widest">
+            Menu
+          </span>
+        </div>
         {NAV_ITEMS.map((item) => {
           const isActive = pathname === item.href;
           return (
             <Link key={item.href} href={item.href}>
-              <motion.div
-                whileHover={{ x: 4 }}
+              <div
                 className={cn(
-                  'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all',
+                  'flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] font-medium transition-all duration-150',
                   isActive
-                    ? 'bg-gradient-to-r from-violet-600/30 to-cyan-600/20 border border-violet-500/30 text-white'
-                    : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
+                    ? 'bg-brand-600/10 text-brand-300'
+                    : 'text-text-tertiary hover:text-text-primary hover:bg-surface-200'
                 )}
               >
-                <span className="text-base">{item.icon}</span>
+                <span
+                  className={cn(
+                    'transition-colors',
+                    isActive ? 'text-brand-400' : 'text-text-muted'
+                  )}
+                >
+                  {icons[item.icon]}
+                </span>
                 {item.label}
                 {isActive && (
-                  <div className="ml-auto w-1.5 h-1.5 bg-violet-400 rounded-full" />
+                  <div className="ml-auto w-1 h-1 rounded-full bg-brand-400" />
                 )}
-              </motion.div>
+              </div>
             </Link>
           );
         })}
       </nav>
 
-      {/* User */}
-      <div className="p-4 border-t border-gray-800">
-        <div className="flex items-center gap-3">
+      {/* Footer */}
+      <div className="p-3 border-t border-border-subtle">
+        <div className="flex items-center gap-3 px-3 py-2">
           <UserButton
             appearance={{
               elements: {
-                avatarBox: 'w-9 h-9',
-                userButtonPopoverCard: 'bg-gray-900 border border-gray-700',
-                userButtonPopoverActionButton: 'text-gray-300 hover:text-white hover:bg-gray-800',
-                userButtonPopoverActionButtonText: 'text-gray-300',
-                userButtonPopoverFooter: 'hidden',
+                avatarBox: 'w-8 h-8',
               },
             }}
           />
           <div className="flex-1 min-w-0">
-            <div className="text-sm font-medium text-white truncate">My Account</div>
-            <div className="text-xs text-gray-500">Manage profile</div>
+            <div className="text-[13px] font-medium text-text-primary truncate">
+              My Account
+            </div>
+            <div className="text-[11px] text-text-muted">Settings</div>
           </div>
         </div>
       </div>
