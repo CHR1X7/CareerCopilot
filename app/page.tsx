@@ -149,8 +149,14 @@ export default function LandingPage() {
               <div className={`w-14 h-14 rounded-2xl ${f.iconBg} ${f.iconColor} flex items-center justify-center mb-5`}>
                 {f.icon}
               </div>
-              <h3 className="text-[17px] font-bold text-text-primary mb-2">
-                {f.title}
+              <h3 className="text-[17px] font-bold mb-2">
+                {f.title === 'Application Tracker' ? (
+                  <>Application <span className="gradient-text-brand">Tracker</span></>
+                ) : f.title === 'Answer Generator' ? (
+                  <>Answer <span className="gradient-text-brand">Generator</span></>
+                ) : (
+                  <>Resume <span className="gradient-text-brand">Analyzer</span></>
+                )}
               </h3>
               <p className="text-[13px] text-text-tertiary leading-relaxed">
                 {f.desc}
@@ -554,7 +560,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-6">
             <span className="text-[12px] text-text-muted hover:text-text-secondary cursor-pointer transition-colors">Privacy</span>
             <span className="text-[12px] text-text-muted hover:text-text-secondary cursor-pointer transition-colors">Terms</span>
-            <span className="text-[12px] text-text-muted">Built with AI, for humans ✨</span>
+            <span className="text-[12px] text-text-muted">Built with next.js✨</span>
           </div>
         </div>
       </div>
