@@ -2,159 +2,85 @@ import Link from 'next/link';
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-surface-0 ambient-bg overflow-hidden">
+    <div className="min-h-screen bg-surface-0 warm-bg overflow-hidden">
       {/* Nav */}
-      <nav className="relative z-20 flex items-center justify-between px-6 h-16 max-w-6xl mx-auto">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 gradient-brand rounded-lg flex items-center justify-center shadow-lg shadow-brand-500/20">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 2 2 7l10 5 10-5-10-5Z" />
-              <path d="m2 17 10 5 10-5" />
-              <path d="m2 12 10 5 10-5" />
+      <nav className="relative z-20 flex items-center justify-between px-8 h-16 max-w-6xl mx-auto">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 gradient-brand rounded-xl flex items-center justify-center shadow-md shadow-brand-500/20">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
+              <path d="M12 2 2 7l10 5 10-5-10-5Z" /><path d="m2 17 10 5 10-5" /><path d="m2 12 10 5 10-5" />
             </svg>
           </div>
-          <span className="text-sm font-semibold text-text-primary tracking-tight">
-            CareerCopilot
-          </span>
+          <span className="text-[15px] font-bold text-text-primary tracking-tight">CareerCopilot</span>
         </div>
         <div className="flex items-center gap-3">
-          <Link href="/sign-in" className="text-[13px] text-text-tertiary hover:text-text-primary transition-colors font-medium px-3 py-1.5">
-            Sign in
-          </Link>
-          <Link href="/sign-up" className="text-[13px] font-medium text-white gradient-brand px-4 py-2 rounded-lg hover:opacity-90 transition-opacity shadow-[0_1px_2px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.1),0_0_20px_rgba(132,61,255,0.15)]">
-            Get started
-          </Link>
+          <Link href="/sign-in" className="text-[13px] text-text-tertiary hover:text-text-primary transition-colors font-medium px-4 py-2">Sign in</Link>
+          <Link href="/sign-up" className="text-[13px] font-semibold text-white gradient-brand px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity shadow-md shadow-brand-500/20">Get started free</Link>
         </div>
       </nav>
 
-      {/* Glow line */}
-      <div className="relative z-10 glow-line" />
-
       {/* Hero */}
-      <div className="relative z-10 max-w-3xl mx-auto px-6 pt-28 pb-20 text-center">
-        {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-500/8 border border-brand-500/15 mb-8 backdrop-blur-sm">
-          <span className="w-1.5 h-1.5 rounded-full bg-brand-400 animate-pulse-soft" />
-          <span className="text-[11px] font-medium text-brand-300 tracking-wide">
-            POWERED BY GROQ AI
-          </span>
+      <div className="relative z-10 max-w-4xl mx-auto px-6 pt-20 pb-16 text-center">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-50 border border-brand-200 mb-8">
+          <span className="w-2 h-2 rounded-full bg-brand-500 animate-pulse-soft" />
+          <span className="text-[12px] font-semibold text-brand-700">Powered by AI — Blazing Fast</span>
         </div>
 
-        <h1 className="text-5xl sm:text-7xl font-bold tracking-tight leading-[1.05] mb-6">
-          <span className="text-text-primary">Your AI co-pilot </span>
-          <br />
-          <span className="gradient-text-hero">to land your dream job</span>
+        <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.08] mb-6">
+          <span className="text-text-primary">Stop applying.<br /></span>
+          <span className="gradient-text-brand">Start landing interviews.</span>
         </h1>
 
-        <p className="text-lg text-text-tertiary max-w-lg mx-auto leading-relaxed mb-10">
-          Analyze resumes, generate tailored answers, and track every application — all powered by AI.
+        <p className="text-lg text-text-tertiary max-w-xl mx-auto leading-relaxed mb-10">
+          CareerCopilot uses AI to analyze your resume, generate tailored answers, and track every application — so you focus on what matters.
         </p>
 
-        <div className="flex items-center justify-center gap-3">
-          <Link href="/sign-up" className="inline-flex items-center gap-2 text-sm font-medium text-white gradient-brand px-7 py-3.5 rounded-xl hover:opacity-90 transition-all shadow-[0_2px_12px_rgba(132,61,255,0.3),0_1px_2px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.1)]">
-            Start for free
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
-            </svg>
+        <div className="flex items-center justify-center gap-4 flex-wrap">
+          <Link href="/sign-up" className="inline-flex items-center gap-2 text-[15px] font-semibold text-white gradient-brand px-8 py-4 rounded-2xl hover:opacity-90 transition-all shadow-lg shadow-brand-500/25">
+            🚀 Start for free
           </Link>
-          <Link href="/sign-in" className="inline-flex items-center gap-2 text-sm font-medium text-text-secondary bg-white/[0.03] border border-white/[0.06] px-7 py-3.5 rounded-xl hover:bg-white/[0.06] hover:border-white/[0.1] transition-all backdrop-blur-sm">
-            Sign in
+          <Link href="/sign-in" className="inline-flex items-center gap-2 text-[15px] font-semibold text-text-secondary bg-surface-0 border-2 border-border-default px-8 py-4 rounded-2xl hover:border-brand-300 hover:text-brand-600 transition-all">
+            Sign in →
           </Link>
         </div>
 
-        <p className="text-[11px] text-text-muted mt-5">
-          No credit card · Free forever tier · Setup in 2 minutes
-        </p>
+        <p className="text-[12px] text-text-muted mt-6 font-medium">No credit card required · Free forever · 2 min setup</p>
       </div>
 
-      {/* Glow line */}
-      <div className="relative z-10 glow-line max-w-xl mx-auto" />
-
       {/* Features */}
-      <div className="relative z-10 max-w-4xl mx-auto px-6 py-20">
+      <div className="relative z-10 max-w-5xl mx-auto px-6 py-16">
         <div className="text-center mb-12">
-          <h2 className="text-2xl font-bold text-text-primary mb-2">
-            Everything you need to land the job
-          </h2>
-          <p className="text-sm text-text-tertiary">
-            Three AI-powered tools working together for your job search
-          </p>
+          <h2 className="text-3xl font-bold text-text-primary mb-3">Everything you need to land the job</h2>
+          <p className="text-text-tertiary">Three AI-powered tools that work together for your success</p>
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-6">
           {[
-            {
-              title: 'Resume Analyzer',
-              desc: 'AI-powered match scoring with keyword insights. Know exactly how to tailor your resume for each job.',
-              icon: (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M3 7V5a2 2 0 0 1 2-2h2" /><path d="M17 3h2a2 2 0 0 1 2 2v2" />
-                  <path d="M21 17v2a2 2 0 0 1-2 2h-2" /><path d="M7 21H5a2 2 0 0 1-2-2v-2" />
-                  <path d="M7 8h10" /><path d="M7 12h10" /><path d="M7 16h10" />
-                </svg>
-              ),
-              color: 'text-brand-400',
-              bg: 'bg-brand-500/8',
-              glow: 'shadow-brand-500/5',
-            },
-            {
-              title: 'Answer Generator',
-              desc: 'Craft compelling, personalized answers using your actual experience and the specific job requirements.',
-              icon: (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                  <path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" />
-                </svg>
-              ),
-              color: 'text-accent-sky',
-              bg: 'bg-sky-500/8',
-              glow: 'shadow-sky-500/5',
-            },
-            {
-              title: 'Application Tracker',
-              desc: 'Visual pipeline from submission to offer. Track status, notes, and match scores all in one place.',
-              icon: (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z" />
-                  <path d="m2 12 8.58 3.91a2 2 0 0 0 1.66 0L21 12" />
-                  <path d="m2 17 8.58 3.91a2 2 0 0 0 1.66 0L21 17" />
-                </svg>
-              ),
-              color: 'text-accent-emerald',
-              bg: 'bg-emerald-500/8',
-              glow: 'shadow-emerald-500/5',
-            },
+            { emoji: '📊', title: 'Resume Analyzer', desc: 'AI match scoring against any job. Know exactly what keywords to add to get past the ATS.', bg: 'bg-gradient-to-br from-brand-50 to-white', border: 'border-brand-100' },
+            { emoji: '✍️', title: 'Answer Generator', desc: 'Craft compelling, personalized answers using your actual experience and the specific role.', bg: 'bg-gradient-to-br from-sky-50 to-white', border: 'border-sky-100' },
+            { emoji: '📋', title: 'Application Tracker', desc: 'Visual pipeline from submission to offer. Never lose track of where you stand.', bg: 'bg-gradient-to-br from-emerald-50 to-white', border: 'border-emerald-100' },
           ].map((f, i) => (
-            <div
-              key={i}
-              className={`surface-primary p-6 hover:border-white/[0.08] transition-all duration-300 group shadow-xl ${f.glow}`}
-            >
-              <div className={`w-10 h-10 rounded-xl ${f.bg} flex items-center justify-center ${f.color} mb-4 group-hover:scale-110 transition-transform`}>
-                {f.icon}
-              </div>
-              <h3 className="text-[14px] font-semibold text-text-primary mb-2">
-                {f.title}
-              </h3>
-              <p className="text-[12px] text-text-tertiary leading-relaxed">
-                {f.desc}
-              </p>
+            <div key={i} className={`${f.bg} border ${f.border} rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300`}>
+              <div className="text-4xl mb-4">{f.emoji}</div>
+              <h3 className="text-[16px] font-bold text-text-primary mb-2">{f.title}</h3>
+              <p className="text-[13px] text-text-tertiary leading-relaxed">{f.desc}</p>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Stats */}
-      <div className="relative z-10 max-w-3xl mx-auto px-6 pb-20">
-        <div className="surface-primary p-8 border-glow">
+      {/* Social Proof */}
+      <div className="relative z-10 max-w-3xl mx-auto px-6 pb-16">
+        <div className="bg-gradient-to-r from-brand-50 via-white to-sky-50 border border-brand-100 rounded-2xl p-8">
           <div className="grid grid-cols-3 gap-8 text-center">
             {[
-              { value: '3x', label: 'Higher callback rate' },
-              { value: '10s', label: 'Average analysis time' },
-              { value: '100%', label: 'Free to start' },
-            ].map((stat, i) => (
+              { value: '3x', label: 'Higher callback rate with tailored resumes' },
+              { value: '<10s', label: 'Average AI analysis time' },
+              { value: '100%', label: 'Free to get started' },
+            ].map((s, i) => (
               <div key={i}>
-                <div className="text-3xl font-black gradient-text-brand mb-1">{stat.value}</div>
-                <div className="text-[12px] text-text-muted">{stat.label}</div>
+                <div className="text-3xl font-black text-brand-600 mb-1">{s.value}</div>
+                <div className="text-[12px] text-text-muted leading-tight">{s.label}</div>
               </div>
             ))}
           </div>
@@ -162,17 +88,25 @@ export default function LandingPage() {
       </div>
 
       {/* Footer */}
-      <div className="relative z-10 border-t border-white/[0.04]">
-        <div className="max-w-4xl mx-auto px-6 py-6 flex items-center justify-between">
-          <span className="text-[11px] text-text-muted">© 2025 CareerCopilot</span>
-          <span className="text-[11px] text-text-muted">Built with AI, for humans</span>
+      <div className="relative z-10 border-t border-border-subtle">
+        <div className="max-w-5xl mx-auto px-6 py-8 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 gradient-brand rounded-lg flex items-center justify-center">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
+                <path d="M12 2 2 7l10 5 10-5-10-5Z" /><path d="m2 17 10 5 10-5" /><path d="m2 12 10 5 10-5" />
+              </svg>
+            </div>
+            <span className="text-[12px] text-text-muted font-medium">© 2025 CareerCopilot</span>
+          </div>
+          <span className="text-[12px] text-text-muted">Built with AI, for humans ✨</span>
         </div>
       </div>
 
-      {/* Ambient orbs */}
-      <div className="orb orb-purple w-[600px] h-[600px] top-[-15%] left-1/2 -translate-x-1/2" />
-      <div className="orb orb-blue w-[400px] h-[400px] top-[50%] right-[-5%]" style={{ animationDelay: '-10s' }} />
-      <div className="orb orb-emerald w-[350px] h-[350px] bottom-[10%] left-[-5%]" style={{ animationDelay: '-5s' }} />
+      {/* Blobs */}
+      <div className="blob blob-purple w-[600px] h-[600px] -top-[15%] left-[10%]" />
+      <div className="blob blob-orange w-[400px] h-[400px] top-[30%] -right-[5%]" style={{ animationDelay: '-10s' }} />
+      <div className="blob blob-blue w-[500px] h-[500px] bottom-[5%] left-[30%]" style={{ animationDelay: '-5s' }} />
+      <div className="blob blob-pink w-[300px] h-[300px] top-[10%] right-[20%]" style={{ animationDelay: '-15s' }} />
     </div>
   );
 }
