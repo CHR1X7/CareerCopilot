@@ -1,6 +1,10 @@
+import { auth } from '@clerk/nextjs/server';
+import { redirect } from 'next/navigation';
 import Link from 'next/link';
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const { userId } = await auth();
+  if (userId) redirect('/dashboard');
   return (
     <div className="min-h-screen overflow-hidden" style={{ background: 'linear-gradient(180deg, #f8faff 0%, #ffffff 30%, #f0f7ff 60%, #faf5ff 80%, #ffffff 100%)' }}>
       {/* Floating blobs */}
