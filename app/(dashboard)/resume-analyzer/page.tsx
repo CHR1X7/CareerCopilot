@@ -20,169 +20,251 @@ export default function ResumeAnalyzerPage() {
   const [activeTab, setActiveTab] = useState<'paste' | 'upload'>('paste');
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: { 'application/pdf': ['.pdf'], 'text/plain': ['.txt'] },
+    accept: { 'text/plain': ['.txt'] },
     maxFiles: 1,
     onDrop: async (files) => {
       const file = files[0];
       if (!file) return;
-
-      if (file.type === 'text/plain') {
-        const text = await file.text();
-        setResumeText(text);
-        toast.success('Resume loaded!');
-      } else {
-        // For PDF, we'll send to API
-        const formData = new FormData();
-        formData.append('file', file);
-        toast.info('PDF parsing - please paste the text manually for now, or use a txt file.');
-        setResumeText(`[PDF uploaded: ${file.name} - Please paste the text content]`);
-      }
+      const text = await file.text();
+      setResumeText(text);
+      toast.success('Resume loaded!');
     },
   });
 
-const handleAnalyze = async () => {
-  if (!resumeText.trim() || !jobDescription.trim()) {
-    toast.error('Please provide both your resume and a job description');
-    return;
-  }
-
-  if (resumeText.trim().length < 50) {
-    toast.error('Resume text is too short — please paste more content');
-    return;
-  }
-
-  if (jobDescription.trim().length < 50) {
-    toast.error('Job description is too short — please paste more content');
-    return;
-  }
-
-  setLoading(true);
-  setAnalysis(null);
-  setFeedback(null);
-
-  try {
-    const res = await fetch('/api/resume/analyze', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        resume_text: resumeText,
-        job_description: jobDescription,
-      }),
-    });
-
-    const data = await res.json();
-    console.log('[Resume Analyzer] Response:', data);
-
-    if (!res.ok) {
-      // Show the actual error from the server
-      toast.error(data.error || `Server error: ${res.status}`);
+  const handleAnalyze = async () => {
+    if (!resumeText.trim() || !jobDescription.trim()) {
+      toast.error('Please provide both your resume and a job description');
       return;
     }
 
-    if (data.analysis) {
-      setAnalysis(data.analysis);
-      toast.success('Analysis complete!');
-    } else {
-      toast.error('No analysis returned. Please try again.');
+    if (resumeText.trim().length < 50) {
+      toast.error('Resume text is too short — please paste more content');
+      return;
     }
-  } catch (err: any) {
-    console.error('[Resume Analyzer] Fetch error:', err);
-    toast.error(`Network error: ${err?.message || 'Please check your connection'}`);
-  } finally {
-    setLoading(false);
-  }
-};
 
-  const priorityColors = {
-    high: 'danger' as const,
-    medium: 'warning' as const,
-    low: 'info' as const,
+    if (jobDescription.trim().length < 50) {
+      toast.error('Job description is too short — please paste more content');
+      return;
+    }
+
+    setLoading(true);
+    setAnalysis(null);
+    setFeedback(null);
+
+    try {
+      const res = await fetch('/api/resume/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          resume_text: resumeText,
+          job_description: jobDescription,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.error || `Server error: ${res.status}`);
+        return;
+      }
+
+      if (data.analysis) {
+        setAnalysis(data.analysis);
+        toast.success('Analysis complete!');
+      } else {
+        toast.error('No analysis returned. Please try again.');
+      }
+    } catch (err: any) {
+      toast.error(`Network error: ${err?.message || 'Please check your connection'}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const priorityVariants: Record<string, 'danger' | 'warning' | 'info'> = {
+    high: 'danger',
+    medium: 'warning',
+    low: 'info',
+  };
+
+  const getScoreVariant = (score: number): 'success' | 'warning' | 'danger' => {
+    if (score >= 70) return 'success';
+    if (score >= 40) return 'warning';
+    return 'danger';
   };
 
   return (
-    <div>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2">
-          📊 Resume <span className="gradient-text">Analyzer</span>
+    <div className="space-y-6 animate-fade-in">
+      {/* Header */}
+      <div>
+        <h1 className="text-2xl font-bold text-text-primary tracking-tight">
+          Resume Analyzer
         </h1>
-        <p className="text-gray-400">Get your match score and actionable insights to land the job</p>
+        <p className="text-sm text-text-tertiary mt-1">
+          Paste your resume and a job description to get your match score and
+          actionable insights
+        </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-6 mb-6">
+      {/* Input Section */}
+      <div className="grid grid-cols-2 gap-4">
         {/* Resume Input */}
-        <Card>
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-white">Your Resume</h3>
-            <div className="flex gap-2">
+        <Card variant="default" padding="md">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-[13px] font-semibold text-text-primary">
+              Your Resume
+            </span>
+            <div className="flex items-center gap-1 p-0.5 bg-surface-200 rounded-lg border border-border-subtle">
               <button
                 onClick={() => setActiveTab('paste')}
-                className={cn('text-xs px-3 py-1 rounded-lg transition-all', activeTab === 'paste' ? 'bg-violet-600 text-white' : 'text-gray-400 hover:text-white')}
+                className={cn(
+                  'px-2.5 py-1 rounded-md text-[11px] font-medium transition-all',
+                  activeTab === 'paste'
+                    ? 'bg-surface-400 text-text-primary'
+                    : 'text-text-muted hover:text-text-secondary'
+                )}
               >
-                Paste Text
+                Paste
               </button>
               <button
                 onClick={() => setActiveTab('upload')}
-                className={cn('text-xs px-3 py-1 rounded-lg transition-all', activeTab === 'upload' ? 'bg-violet-600 text-white' : 'text-gray-400 hover:text-white')}
+                className={cn(
+                  'px-2.5 py-1 rounded-md text-[11px] font-medium transition-all',
+                  activeTab === 'upload'
+                    ? 'bg-surface-400 text-text-primary'
+                    : 'text-text-muted hover:text-text-secondary'
+                )}
               >
-                Upload File
+                Upload
               </button>
             </div>
           </div>
 
           {activeTab === 'paste' ? (
             <textarea
-              className="w-full h-64 bg-gray-800/50 border border-gray-700 rounded-xl p-4 text-sm text-gray-300 placeholder-gray-600 focus:outline-none focus:border-violet-500 resize-none"
-              placeholder="Paste your resume content here..."
+              className="input-field resize-none h-64 text-[13px]"
+              placeholder="Paste your full resume here..."
               value={resumeText}
-              onChange={e => setResumeText(e.target.value)}
+              onChange={(e) => setResumeText(e.target.value)}
             />
           ) : (
             <div
               {...getRootProps()}
               className={cn(
                 'h-64 border-2 border-dashed rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all',
-                isDragActive ? 'border-violet-500 bg-violet-500/10' : 'border-gray-700 hover:border-gray-600'
+                isDragActive
+                  ? 'border-brand-500 bg-brand-500/5'
+                  : 'border-border-default hover:border-border-strong hover:bg-surface-200'
               )}
             >
               <input {...getInputProps()} />
-              <div className="text-4xl mb-3">📄</div>
-              <div className="text-gray-400 text-sm text-center">
-                {isDragActive ? 'Drop it here!' : 'Drag & drop your resume\nor click to browse'}
+              <div className="w-10 h-10 rounded-xl bg-surface-200 flex items-center justify-center mb-3">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  className="text-text-muted"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
               </div>
-              <div className="text-gray-600 text-xs mt-2">.txt files supported</div>
-              {resumeText && <div className="mt-3 text-emerald-400 text-xs">✓ Resume loaded</div>}
+              <p className="text-[13px] text-text-tertiary text-center">
+                {isDragActive
+                  ? 'Drop it here'
+                  : 'Drag & drop or click to upload'}
+              </p>
+              <p className="text-[11px] text-text-muted mt-1">.txt files</p>
+              {resumeText && (
+                <div className="mt-2">
+                  <Badge variant="success" dot>
+                    Resume loaded
+                  </Badge>
+                </div>
+              )}
             </div>
           )}
 
-          <div className="mt-2 text-right text-xs text-gray-600">
-            {resumeText.length} characters
+          <div className="flex justify-between items-center mt-2">
+            <span className="text-[11px] text-text-muted">
+              {resumeText.length > 0 && `${resumeText.length} characters`}
+            </span>
+            {resumeText && (
+              <button
+                onClick={() => setResumeText('')}
+                className="text-[11px] text-text-muted hover:text-accent-rose transition-colors"
+              >
+                Clear
+              </button>
+            )}
           </div>
         </Card>
 
         {/* Job Description */}
-        <Card>
-          <h3 className="font-semibold text-white mb-4">Job Description</h3>
+        <Card variant="default" padding="md">
+          <div className="mb-3">
+            <span className="text-[13px] font-semibold text-text-primary">
+              Job Description
+            </span>
+          </div>
           <textarea
-            className="w-full h-64 bg-gray-800/50 border border-gray-700 rounded-xl p-4 text-sm text-gray-300 placeholder-gray-600 focus:outline-none focus:border-violet-500 resize-none"
+            className="input-field resize-none h-64 text-[13px]"
             placeholder="Paste the full job description here..."
             value={jobDescription}
-            onChange={e => setJobDescription(e.target.value)}
+            onChange={(e) => setJobDescription(e.target.value)}
           />
-          <div className="mt-2 text-right text-xs text-gray-600">
-            {jobDescription.length} characters
+          <div className="flex justify-between items-center mt-2">
+            <span className="text-[11px] text-text-muted">
+              {jobDescription.length > 0 &&
+                `${jobDescription.length} characters`}
+            </span>
+            {jobDescription && (
+              <button
+                onClick={() => setJobDescription('')}
+                className="text-[11px] text-text-muted hover:text-accent-rose transition-colors"
+              >
+                Clear
+              </button>
+            )}
           </div>
         </Card>
       </div>
 
-      <div className="flex justify-center mb-8">
+      {/* Analyze Button */}
+      <div className="flex justify-center">
         <Button
           size="lg"
           onClick={handleAnalyze}
           loading={loading}
-          icon={<span>🔍</span>}
-          className="px-12"
+          icon={
+            !loading ? (
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M3 7V5a2 2 0 0 1 2-2h2" />
+                <path d="M17 3h2a2 2 0 0 1 2 2v2" />
+                <path d="M21 17v2a2 2 0 0 1-2 2h-2" />
+                <path d="M7 21H5a2 2 0 0 1-2-2v-2" />
+                <path d="M7 8h10" />
+                <path d="M7 12h10" />
+                <path d="M7 16h10" />
+              </svg>
+            ) : undefined
+          }
+          className="px-10"
         >
-          {loading ? 'AI is analyzing your resume...' : 'Analyze Resume Match'}
+          {loading ? 'Analyzing your resume...' : 'Analyze Match'}
         </Button>
       </div>
 
@@ -190,110 +272,285 @@ const handleAnalyze = async () => {
       <AnimatePresence>
         {loading && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="glass-card p-8 text-center mb-6"
           >
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="w-3 h-3 bg-violet-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-              <div className="w-3 h-3 bg-violet-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-              <div className="w-3 h-3 bg-violet-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-            </div>
-            <p className="text-gray-400">🤖 AI agent is analyzing your resume against the job description...</p>
-            <p className="text-gray-600 text-sm mt-2">This usually takes 5-10 seconds</p>
+            <Card variant="default" className="text-center py-10">
+              <div className="flex items-center justify-center gap-1.5 mb-4">
+                {[0, 1, 2].map((i) => (
+                  <div
+                    key={i}
+                    className="w-2 h-2 rounded-full bg-brand-500 animate-bounce"
+                    style={{ animationDelay: `${i * 150}ms` }}
+                  />
+                ))}
+              </div>
+              <p className="text-[13px] text-text-tertiary">
+                AI is analyzing your resume against the job description
+              </p>
+              <p className="text-[11px] text-text-muted mt-1">
+                This usually takes 5–10 seconds
+              </p>
+            </Card>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Analysis Results */}
+      {/* Results */}
       <AnimatePresence>
         {analysis && !loading && (
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            className="space-y-6"
+            className="space-y-4"
           >
-            {/* Score Hero */}
-            <Card glow className="text-center py-10">
+            {/* Score Card */}
+            <Card variant="elevated" className="text-center py-10">
               <div className="mb-6">
-                <div className={`text-8xl font-black ${getScoreColor(analysis.match_score)} mb-2`}>
-                  {analysis.match_score}%
+                {/* Score Ring */}
+                <div className="relative w-36 h-36 mx-auto mb-5">
+                  <svg
+                    className="w-full h-full -rotate-90"
+                    viewBox="0 0 120 120"
+                  >
+                    <circle
+                      cx="60"
+                      cy="60"
+                      r="54"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="8"
+                      className="text-surface-200"
+                    />
+                    <circle
+                      cx="60"
+                      cy="60"
+                      r="54"
+                      fill="none"
+                      strokeWidth="8"
+                      strokeLinecap="round"
+                      stroke={
+                        analysis.match_score >= 70
+                          ? '#34d399'
+                          : analysis.match_score >= 40
+                          ? '#fbbf24'
+                          : '#fb7185'
+                      }
+                      strokeDasharray={`${(analysis.match_score / 100) * 339} 339`}
+                      className="transition-all duration-1000"
+                    />
+                  </svg>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span
+                      className={cn(
+                        'text-4xl font-bold tabular-nums',
+                        getScoreColor(analysis.match_score)
+                      )}
+                    >
+                      {analysis.match_score}
+                    </span>
+                    <span className="text-[11px] text-text-muted font-medium">
+                      / 100
+                    </span>
+                  </div>
                 </div>
-                <div className="text-xl font-semibold text-white mb-1">Match Score</div>
+
+                <h2 className="text-lg font-bold text-text-primary mb-1">
+                  Match Score
+                </h2>
                 <Progress
                   value={analysis.match_score}
-                  size="lg"
-                  barClassName={`bg-gradient-to-r ${getScoreBg(analysis.match_score)}`}
-                  className="max-w-md mx-auto mt-4"
+                  variant={getScoreVariant(analysis.match_score)}
+                  size="md"
+                  animated
+                  className="max-w-xs mx-auto"
                 />
               </div>
-              <p className="text-gray-300 max-w-2xl mx-auto">{analysis.overall_assessment}</p>
-              
+
+              <p className="text-[13px] text-text-tertiary max-w-lg mx-auto leading-relaxed">
+                {analysis.overall_assessment}
+              </p>
+
               {/* Feedback */}
-              <div className="mt-6 flex items-center justify-center gap-3">
-                <span className="text-sm text-gray-500">Was this analysis helpful?</span>
+              <div className="flex items-center justify-center gap-2 mt-6 pt-6 border-t border-border-subtle">
+                <span className="text-[11px] text-text-muted">
+                  Was this helpful?
+                </span>
                 <button
-                  onClick={() => { setFeedback('up'); toast.success('Thanks for your feedback!'); }}
-                  className={cn('text-2xl transition-all hover:scale-110', feedback === 'up' ? 'opacity-100' : 'opacity-40 hover:opacity-80')}
-                >👍</button>
+                  onClick={() => {
+                    setFeedback('up');
+                    toast.success('Thanks for your feedback!');
+                  }}
+                  className={cn(
+                    'w-7 h-7 rounded-lg flex items-center justify-center text-sm transition-all',
+                    feedback === 'up'
+                      ? 'bg-emerald-500/20 text-accent-emerald'
+                      : 'bg-surface-200 text-text-muted hover:text-text-primary'
+                  )}
+                >
+                  👍
+                </button>
                 <button
-                  onClick={() => { setFeedback('down'); toast.success('Thanks! We\'ll improve this.'); }}
-                  className={cn('text-2xl transition-all hover:scale-110', feedback === 'down' ? 'opacity-100' : 'opacity-40 hover:opacity-80')}
-                >👎</button>
+                  onClick={() => {
+                    setFeedback('down');
+                    toast.success("Thanks! We'll improve.");
+                  }}
+                  className={cn(
+                    'w-7 h-7 rounded-lg flex items-center justify-center text-sm transition-all',
+                    feedback === 'down'
+                      ? 'bg-rose-500/20 text-accent-rose'
+                      : 'bg-surface-200 text-text-muted hover:text-text-primary'
+                  )}
+                >
+                  👎
+                </button>
               </div>
             </Card>
 
-            {/* Skills Breakdown */}
-            <div className="grid grid-cols-2 gap-6">
-              <Card>
-                <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
-                  <span className="text-emerald-400">✅</span> Matched Skills ({analysis.matched_skills?.length || 0})
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {analysis.matched_skills?.map(skill => (
-                    <Badge key={skill} variant="success">{skill}</Badge>
+            {/* Skills Grid */}
+            <div className="grid grid-cols-2 gap-4">
+              <Card variant="default" padding="md">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-5 h-5 rounded-md bg-emerald-500/10 flex items-center justify-center">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      className="text-accent-emerald"
+                    >
+                      <path d="M20 6 9 17l-5-5" />
+                    </svg>
+                  </div>
+                  <span className="text-[13px] font-semibold text-text-primary">
+                    Matched Skills
+                  </span>
+                  <span className="text-[11px] text-text-muted ml-auto">
+                    {analysis.matched_skills?.length || 0}
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {analysis.matched_skills?.map((skill) => (
+                    <Badge key={skill} variant="success" size="sm">
+                      {skill}
+                    </Badge>
                   ))}
+                  {!analysis.matched_skills?.length && (
+                    <span className="text-[12px] text-text-muted">
+                      None found
+                    </span>
+                  )}
                 </div>
               </Card>
 
-              <Card>
-                <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
-                  <span className="text-red-400">❌</span> Missing Skills ({analysis.missing_skills?.length || 0})
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {analysis.missing_skills?.map(skill => (
-                    <Badge key={skill} variant="danger">{skill}</Badge>
+              <Card variant="default" padding="md">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-5 h-5 rounded-md bg-rose-500/10 flex items-center justify-center">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      className="text-accent-rose"
+                    >
+                      <path d="M18 6 6 18" />
+                      <path d="m6 6 12 12" />
+                    </svg>
+                  </div>
+                  <span className="text-[13px] font-semibold text-text-primary">
+                    Missing Skills
+                  </span>
+                  <span className="text-[11px] text-text-muted ml-auto">
+                    {analysis.missing_skills?.length || 0}
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {analysis.missing_skills?.map((skill) => (
+                    <Badge key={skill} variant="danger" size="sm">
+                      {skill}
+                    </Badge>
                   ))}
+                  {!analysis.missing_skills?.length && (
+                    <span className="text-[12px] text-text-muted">
+                      None missing
+                    </span>
+                  )}
                 </div>
               </Card>
             </div>
 
             {/* Insights */}
-            <Card>
-              <h3 className="font-semibold text-white mb-6 text-lg">💡 Actionable Insights</h3>
-              <div className="space-y-4">
+            <Card variant="default" padding="md">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-6 h-6 rounded-lg bg-brand-500/10 flex items-center justify-center">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    className="text-brand-400"
+                  >
+                    <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+                  </svg>
+                </div>
+                <span className="text-[13px] font-semibold text-text-primary">
+                  Actionable Insights
+                </span>
+                <span className="text-[11px] text-text-muted ml-auto">
+                  {analysis.insights?.length || 0} suggestions
+                </span>
+              </div>
+
+              <div className="space-y-3">
                 {analysis.insights?.map((insight, i) => (
                   <motion.div
                     key={i}
-                    initial={{ opacity: 0, x: -10 }}
+                    initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.08 }}
-                    className="p-4 bg-gray-800/50 rounded-xl border border-gray-700"
+                    transition={{ delay: i * 0.06 }}
+                    className="p-4 bg-surface-200 rounded-xl border border-border-subtle"
                   >
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <Badge variant={priorityColors[insight.priority]}>
-                          {insight.priority.toUpperCase()}
-                        </Badge>
-                        <span className="text-xs text-gray-500">{insight.category}</span>
-                      </div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge
+                        variant={priorityVariants[insight.priority] || 'info'}
+                        size="sm"
+                        dot
+                      >
+                        {insight.priority?.toUpperCase()}
+                      </Badge>
+                      <span className="text-[10px] text-text-muted uppercase tracking-wider">
+                        {insight.category}
+                      </span>
                     </div>
-                    <h4 className="font-semibold text-white mb-1">{insight.title}</h4>
-                    <p className="text-sm text-gray-400 mb-3">{insight.description}</p>
-                    <div className="flex items-start gap-2 p-3 bg-violet-900/20 rounded-lg border border-violet-500/20">
-                      <span className="text-violet-400 text-sm mt-0.5">→</span>
-                      <p className="text-sm text-violet-300">{insight.action}</p>
+                    <h4 className="text-[13px] font-semibold text-text-primary mb-1">
+                      {insight.title}
+                    </h4>
+                    <p className="text-[12px] text-text-tertiary leading-relaxed mb-3">
+                      {insight.description}
+                    </p>
+                    <div className="flex items-start gap-2 p-3 bg-brand-500/5 rounded-lg border border-brand-500/10">
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        className="text-brand-400 mt-0.5 flex-shrink-0"
+                      >
+                        <path d="M5 12h14" />
+                        <path d="m12 5 7 7-7 7" />
+                      </svg>
+                      <p className="text-[12px] text-brand-300 leading-relaxed">
+                        {insight.action}
+                      </p>
                     </div>
                   </motion.div>
                 ))}
