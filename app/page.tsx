@@ -552,7 +552,7 @@ export default async function LandingPage() {
               </svg>
             </div>
             <span className="text-[12px] text-text-muted font-medium">
-              © 2025 CareerCopilot
+              © 2026 CareerCopilot
             </span>
           </div>
           <div className="flex items-center gap-6">
