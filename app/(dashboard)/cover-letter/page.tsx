@@ -61,8 +61,8 @@ export default function CoverLetterPage() {
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-text-primary tracking-tight">
-          AI Cover Letter Generator ✉️
+        <h1 className="text-2xl font-bold tracking-tight">
+          ✉️ <span className="gradient-text-brand">Cover Letter</span>
         </h1>
         <p className="text-sm text-text-tertiary mt-1">
           Generate personalized cover letters tailored to each job application

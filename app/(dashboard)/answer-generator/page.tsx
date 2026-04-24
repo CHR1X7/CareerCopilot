@@ -155,8 +155,8 @@ export default function AnswerGeneratorPage() {
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-text-primary tracking-tight">
-          Answer Generator
+        <h1 className="text-2xl font-bold tracking-tight">
+          💬 <span className="gradient-text-brand">Answer Generator</span>
         </h1>
         <p className="text-sm text-text-tertiary mt-1">
           Generate personalized, compelling answers tailored to each job

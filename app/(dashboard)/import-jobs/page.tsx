@@ -92,8 +92,8 @@ export default function ImportJobsPage() {
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-text-primary tracking-tight">
-          Import Jobs 🔗
+        <h1 className="text-2xl font-bold tracking-tight">
+          🔗 <span className="gradient-text-brand">Import Jobs</span>
         </h1>
         <p className="text-sm text-text-tertiary mt-1">
           Paste a job URL or the job description text — our AI extracts all the details

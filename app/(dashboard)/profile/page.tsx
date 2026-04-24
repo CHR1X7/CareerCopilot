@@ -265,8 +265,8 @@ export default function ProfilePage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-text-primary tracking-tight">
-            My Profile
+          <h1 className="text-2xl font-bold tracking-tight">
+            👤 <span className="gradient-text-brand">My Profile</span>
           </h1>
           <p className="text-sm text-text-tertiary mt-1">
             Keep your profile updated for better AI personalization

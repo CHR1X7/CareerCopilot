@@ -237,8 +237,8 @@ export default function ResumeAnalyzerPage() {
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-text-primary tracking-tight">
-          Resume Analyzer
+        <h1 className="text-2xl font-bold tracking-tight">
+          📄 <span className="gradient-text-brand">Resume Analyzer</span>
         </h1>
         <p className="text-sm text-text-tertiary mt-1">
           Paste your resume and a job description to get your match score and

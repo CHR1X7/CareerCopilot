@@ -172,7 +172,7 @@ export default function ResumeBuilderPage() {
       {/* Header */}
       <div className="flex items-center justify-between print:hidden">
         <div>
-          <h1 className="text-2xl font-bold text-text-primary tracking-tight">Resume Builder 📝</h1>
+          <h1 className="text-2xl font-bold tracking-tight">📝 <span className="gradient-text-brand">Resume Builder</span></h1>
           <p className="text-sm text-text-tertiary mt-1">Build ATS-friendly resumes with live preview</p>
         </div>
         <div className="flex gap-2">
