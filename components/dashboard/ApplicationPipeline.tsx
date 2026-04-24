@@ -13,7 +13,7 @@ export default function ApplicationPipeline({ applications, loading }: Props) {
     return (
       <div className="space-y-2">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="skeleton h-16 rounded-xl" />
+          <div key={i} className="h-16 bg-gray-100 rounded-xl animate-pulse" />
         ))}
       </div>
     );
@@ -21,8 +21,8 @@ export default function ApplicationPipeline({ applications, loading }: Props) {
 
   if (applications.length === 0) {
     return (
-      <div className="surface-primary rounded-2xl p-10 text-center">
-        <div className="w-12 h-12 rounded-2xl bg-surface-200 flex items-center justify-center mx-auto mb-3">
+      <div className="bg-white border border-border-default rounded-2xl p-10 text-center">
+        <div className="w-12 h-12 rounded-2xl bg-surface-100 flex items-center justify-center mx-auto mb-3">
           <svg
             width="22"
             height="22"
@@ -37,9 +37,7 @@ export default function ApplicationPipeline({ applications, loading }: Props) {
             <path d="M8 12h8" />
           </svg>
         </div>
-        <p className="text-sm text-text-tertiary">
-          No applications yet
-        </p>
+        <p className="text-sm text-text-tertiary">No applications yet</p>
         <p className="text-xs text-text-muted mt-1">
           Start tracking your job search
         </p>
@@ -48,28 +46,23 @@ export default function ApplicationPipeline({ applications, loading }: Props) {
   }
 
   return (
-    <div className="space-y-1.5">
+    <div className="space-y-2">
       {applications.map((app) => {
         const config = STATUS_CONFIG[app.status];
         return (
           <div
             key={app.id}
-            className="surface-interactive rounded-xl px-4 py-3 flex items-center justify-between group"
+            className="bg-white border border-border-default rounded-xl px-4 py-3 flex items-center justify-between hover:border-border-strong hover:shadow-sm transition-all"
           >
             <div className="flex items-center gap-3.5 min-w-0">
-              <div
-                className={cn(
-                  'w-9 h-9 rounded-lg flex items-center justify-center text-sm flex-shrink-0',
-                  config.bgColor
-                )}
-              >
+              <div className="w-9 h-9 rounded-lg bg-surface-100 flex items-center justify-center text-sm flex-shrink-0">
                 {config.icon}
               </div>
               <div className="min-w-0">
-                <div className="text-[13px] font-medium text-text-primary truncate">
+                <div className="text-[13px] font-semibold text-text-primary truncate">
                   {app.job_title}
                 </div>
-                <div className="text-[12px] text-text-muted truncate">
+                <div className="text-[12px] text-text-tertiary truncate">
                   {app.company_name}
                 </div>
               </div>
@@ -77,15 +70,22 @@ export default function ApplicationPipeline({ applications, loading }: Props) {
 
             <div className="flex items-center gap-3 flex-shrink-0">
               {app.match_score && (
-                <span className="text-[12px] font-mono font-medium text-brand-400 tabular-nums">
+                <span className="text-[12px] font-bold text-brand-600 tabular-nums">
                   {app.match_score}%
                 </span>
               )}
               <span
                 className={cn(
-                  'text-[11px] font-medium px-2 py-0.5 rounded-full',
-                  config.bgColor,
-                  config.color
+                  'text-[11px] font-semibold px-2.5 py-1 rounded-full',
+                  config.color === 'text-gray-400' && 'bg-gray-100 text-gray-600',
+                  config.color === 'text-blue-400' && 'bg-blue-50 text-blue-700',
+                  config.color === 'text-cyan-400' && 'bg-cyan-50 text-cyan-700',
+                  config.color === 'text-violet-400' && 'bg-violet-50 text-violet-700',
+                  config.color === 'text-purple-400' && 'bg-purple-50 text-purple-700',
+                  config.color === 'text-emerald-400' && 'bg-emerald-50 text-emerald-700',
+                  config.color === 'text-red-400' && 'bg-red-50 text-red-700',
+                  config.color === 'text-orange-400' && 'bg-orange-50 text-orange-700',
+                  config.color === 'text-yellow-400' && 'bg-yellow-50 text-yellow-700',
                 )}
               >
                 {config.label}

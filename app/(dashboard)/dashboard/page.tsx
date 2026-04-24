@@ -145,28 +145,28 @@ export default function DashboardPage() {
       </div>
 
       {/* Insight Card */}
-      <Card
-        variant="default"
-        className="bg-gradient-to-br from-brand-600/[0.04] to-sky-600/[0.04] border-brand-500/10"
-      >
-        <div className="flex items-start gap-4">
-          <div className="w-10 h-10 rounded-xl gradient-brand flex items-center justify-center flex-shrink-0">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
-            </svg>
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="text-[13px] font-semibold text-text-primary mb-1">
-              Pro tip
-            </h3>
-            <p className="text-[12px] text-text-tertiary leading-relaxed">
-              Candidates who tailor their resume for each application have a 3x
-              higher callback rate. Use the Resume Analyzer to check your match
-              score before applying.
-            </p>
-          </div>
-        </div>
-      </Card>
+<Card
+  variant="default"
+  className="bg-gradient-to-br from-violet-50 to-indigo-50 border-violet-200"
+>
+  <div className="flex items-start gap-4">
+    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-500 flex items-center justify-center flex-shrink-0">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+      </svg>
+    </div>
+    <div className="flex-1 min-w-0">
+      <h3 className="text-[13px] font-semibold text-text-primary mb-1">
+        Pro tip
+      </h3>
+      <p className="text-[13px] text-text-tertiary leading-relaxed">
+        Candidates who tailor their resume for each application have a 3x
+        higher callback rate. Use the Resume Analyzer to check your match
+        score before applying.
+      </p>
+    </div>
+  </div>
+</Card>
     </div>
   );
 }
