@@ -298,8 +298,3 @@ Remotive, Arbeitnow, Himalayas for job listings
 Vercel for hosting
 Tailwind CSS for styling
 Framer Motion for animations
-
-
----
-
-Replace `YOUR_USERNAME` in the clone URL with your actual GitHub username. Also replace the placeholder screenshot images with real screenshots of your deployed app — you can take them and upload to your GitHub repo's `public/` folder or use a service like imgur.
