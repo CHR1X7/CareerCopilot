@@ -53,73 +53,75 @@ export default function DashboardPage() {
       <StatsOverview applications={applications} loading={appsLoading} />
 
       {/* Quick Actions */}
-      <div>
-        <h2 className="text-sm font-semibold text-text-secondary mb-3">
-          Quick Actions
-        </h2>
-        <div className="grid grid-cols-3 gap-3">
-          {[
-            {
-              title: 'Analyze Resume',
-              desc: 'Get your match score',
-              href: '/resume-analyzer',
-              color: 'text-brand-400',
-              bg: 'bg-brand-500/8',
-              border: 'border-brand-500/10',
-              icon: (
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M3 7V5a2 2 0 0 1 2-2h2" /><path d="M17 3h2a2 2 0 0 1 2 2v2" />
-                  <path d="M21 17v2a2 2 0 0 1-2 2h-2" /><path d="M7 21H5a2 2 0 0 1-2-2v-2" />
-                  <path d="M7 8h10" /><path d="M7 12h10" /><path d="M7 16h10" />
-                </svg>
-              ),
-            },
-            {
-              title: 'Generate Answers',
-              desc: 'AI-tailored responses',
-              href: '/answer-generator',
-              color: 'text-accent-sky',
-              bg: 'bg-sky-500/8',
-              border: 'border-sky-500/10',
-              icon: (
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                  <path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" />
-                </svg>
-              ),
-            },
-            {
-              title: 'Track Application',
-              desc: 'Add new application',
-              href: '/applications',
-              color: 'text-accent-emerald',
-              bg: 'bg-emerald-500/8',
-              border: 'border-emerald-500/10',
-              icon: (
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z" />
-                  <path d="m2 12 8.58 3.91a2 2 0 0 0 1.66 0L21 12" />
-                  <path d="m2 17 8.58 3.91a2 2 0 0 0 1.66 0L21 17" />
-                </svg>
-              ),
-            },
-          ].map((action, i) => (
-            <Link key={i} href={action.href}>
-              <div
-                className={`surface-interactive rounded-2xl p-4 h-full ${action.bg} ${action.border} group`}
-              >
-                <div className={`${action.color} mb-3`}>{action.icon}</div>
-                <div className="text-[13px] font-semibold text-text-primary">
-                  {action.title}
-                </div>
-                <div className="text-[12px] text-text-muted mt-0.5">
-                  {action.desc}
-                </div>
-              </div>
-            </Link>
-          ))}
+<div>
+  <h2 className="text-sm font-semibold text-text-secondary mb-3">
+    Quick Actions
+  </h2>
+  <div className="grid grid-cols-3 gap-3">
+    {[
+      {
+        title: 'Analyze Resume',
+        desc: 'Get your match score',
+        href: '/resume-analyzer',
+        color: 'text-violet-700',
+        bg: 'bg-gradient-to-br from-violet-50 to-indigo-50',
+        border: 'border-violet-200',
+        icon: (
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 7V5a2 2 0 0 1 2-2h2" /><path d="M17 3h2a2 2 0 0 1 2 2v2" />
+            <path d="M21 17v2a2 2 0 0 1-2 2h-2" /><path d="M7 21H5a2 2 0 0 1-2-2v-2" />
+            <path d="M7 8h10" /><path d="M7 12h10" /><path d="M7 16h10" />
+          </svg>
+        ),
+      },
+      {
+        title: 'Generate Answers',
+        desc: 'AI-tailored responses',
+        href: '/answer-generator',
+        color: 'text-sky-700',
+        bg: 'bg-gradient-to-br from-sky-50 to-cyan-50',
+        border: 'border-sky-200',
+        icon: (
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+            <path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" />
+          </svg>
+        ),
+      },
+      {
+        title: 'Track Application',
+        desc: 'Add new application',
+        href: '/applications',
+        color: 'text-emerald-700',
+        bg: 'bg-gradient-to-br from-emerald-50 to-teal-50',
+        border: 'border-emerald-200',
+        icon: (
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z" />
+            <path d="m2 12 8.58 3.91a2 2 0 0 0 1.66 0L21 12" />
+            <path d="m2 17 8.58 3.91a2 2 0 0 0 1.66 0L21 17" />
+          </svg>
+        ),
+      },
+    ].map((action, i) => (
+      <Link key={i} href={action.href}>
+        <div
+          className={`${action.bg} border ${action.border} rounded-2xl p-4 h-full hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group`}
+        >
+          <div className={`${action.color} mb-3 group-hover:scale-110 transition-transform`}>
+            {action.icon}
+          </div>
+          <div className="text-[13px] font-semibold text-text-primary">
+            {action.title}
+          </div>
+          <div className="text-[12px] text-text-tertiary mt-0.5">
+            {action.desc}
+          </div>
         </div>
-      </div>
+      </Link>
+    ))}
+  </div>
+</div>
 
       {/* Pipeline */}
       <div>
