@@ -145,12 +145,11 @@ export default function LandingPage() {
             <div
               key={i}
               className={`bg-gradient-to-br ${f.gradient} border ${f.border} rounded-2xl p-7 hover:shadow-xl hover:-translate-y-1 transition-all duration-300`}
-              style={f.title === 'Application Tracker' ? { background: '#ffcccc' } : undefined}
             >
               <div className={`w-14 h-14 rounded-2xl ${f.iconBg} ${f.iconColor} flex items-center justify-center mb-5`}>
                 {f.icon}
               </div>
-              <h3 className="text-[17px] font-bold mb-2" style={{ color: f.title === 'Application Tracker' ? '#ff0000' : 'var(--color-text-primary)' }}>
+              <h3 className="text-[17px] font-bold text-text-primary mb-2">
                 {f.title}
               </h3>
               <p className="text-[13px] text-text-tertiary leading-relaxed">

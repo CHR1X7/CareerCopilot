@@ -59,7 +59,7 @@ export default function ApplicationsPage() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">
-            📋 Application <span className="gradient-text">Tracker</span>
+            📋 Application <span className="gradient-text-brand">Tracker</span>
           </h1>
           <p className="text-gray-400">Track every step of your job search journey</p>
         </div>
