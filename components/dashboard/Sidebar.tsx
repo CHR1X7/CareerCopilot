@@ -65,6 +65,18 @@ const NAV_ITEMS = [
     ),
   },
   {
+  href: '/job-scout',
+  label: 'Job Scout',
+  icon: (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.3-4.3" />
+      <path d="M11 8v6" />
+      <path d="M8 11h6" />
+    </svg>
+  ),
+  },
+  {
     href: '/answer-generator',
     label: 'Answer Generator',
     icon: (
