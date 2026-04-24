@@ -300,51 +300,72 @@ export default function ProfilePage() {
       )}
 
       {/* Preferences Tab */}
-      {activeTab === 'preferences' && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <Card>
-            <h3 className="font-semibold text-white mb-4">Your Preferences</h3>
-            <div className="space-y-6">
-              <div>
-                <label className="text-sm font-medium text-gray-400 mb-2 block">Interested Roles</label>
-                <div className="flex flex-wrap gap-2">
-                  {(formData.interested_roles || []).map((r: string) => (
-                    <Badge key={r} variant="violet">{r}</Badge>
-                  ))}
-                  {!(formData.interested_roles?.length) && <span className="text-gray-600 text-sm">None selected</span>}
-                </div>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-400 mb-2 block">Preferred Locations</label>
-                <div className="flex flex-wrap gap-2">
-                  {(formData.preferred_locations || []).map((l: string) => (
-                    <Badge key={l} variant="info">{l}</Badge>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-400 mb-2 block">Skills</label>
-                <div className="flex flex-wrap gap-2">
-                  {(formData.skills || []).map((s: string) => (
-                    <Badge key={s} variant="success">{s}</Badge>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-400 mb-2 block">Minimum Salary</label>
-                <div className="text-2xl font-bold text-white">
-                  ${((formData.min_salary || 0) / 1000).toFixed(0)}K/year
-                </div>
-              </div>
-              <div className="p-4 bg-violet-900/20 border border-violet-500/20 rounded-xl">
-                <p className="text-sm text-violet-400">
-                  💡 To update your preferences, retake the onboarding wizard or contact support.
-                </p>
-              </div>
-            </div>
-          </Card>
-        </motion.div>
-      )}
+         {activeTab === 'preferences' && (
+  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+    <Card>
+      <h3 className="font-semibold text-white mb-4">Your Preferences</h3>
+      <div className="space-y-6">
+        <div>
+          <label className="text-sm font-medium text-gray-400 mb-2 block">
+            Interested Roles
+          </label>
+          <div className="flex flex-wrap gap-2">
+            {(formData.interested_roles || []).map((r: string) => (
+              // ✅ brand instead of violet
+              <Badge key={r} variant="brand">{r}</Badge>
+            ))}
+            {!(formData.interested_roles?.length) && (
+              <span className="text-gray-600 text-sm">None selected</span>
+            )}
+          </div>
+        </div>
+
+        <div>
+          <label className="text-sm font-medium text-gray-400 mb-2 block">
+            Preferred Locations
+          </label>
+          <div className="flex flex-wrap gap-2">
+            {(formData.preferred_locations || []).map((l: string) => (
+              <Badge key={l} variant="info">{l}</Badge>
+            ))}
+            {!(formData.preferred_locations?.length) && (
+              <span className="text-gray-600 text-sm">None selected</span>
+            )}
+          </div>
+        </div>
+
+        <div>
+          <label className="text-sm font-medium text-gray-400 mb-2 block">
+            Skills
+          </label>
+          <div className="flex flex-wrap gap-2">
+            {(formData.skills || []).map((s: string) => (
+              <Badge key={s} variant="success">{s}</Badge>
+            ))}
+            {!(formData.skills?.length) && (
+              <span className="text-gray-600 text-sm">None selected</span>
+            )}
+          </div>
+        </div>
+
+        <div>
+          <label className="text-sm font-medium text-gray-400 mb-2 block">
+            Minimum Salary
+          </label>
+          <div className="text-2xl font-bold text-white">
+            ${((formData.min_salary || 0) / 1000).toFixed(0)}K/year
+          </div>
+        </div>
+
+        <div className="p-4 bg-brand-500/5 border border-brand-500/10 rounded-xl">
+          <p className="text-sm text-brand-400">
+            💡 To update your preferences, complete the onboarding wizard again.
+          </p>
+        </div>
+      </div>
+    </Card>
+  </motion.div>
+)}
     </div>
   );
 }
