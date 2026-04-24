@@ -127,7 +127,7 @@ Stores thumbs up/down feedback for AI features.
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/CareerCopilot.git
+git clone https://github.com/CHR1X7/CareerCopilot.git
 cd CareerCopilot
 
 ## 🚀 Getting Started
