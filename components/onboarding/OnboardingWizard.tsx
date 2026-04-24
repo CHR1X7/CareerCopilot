@@ -215,7 +215,7 @@ export default function OnboardingWizard() {
           <Progress
             value={progressPercent}
             size="md"
-            barClassName="bg-gradient-to-r from-violet-500 to-cyan-500"
+            className="bg-gradient-to-r from-violet-500 to-cyan-500"
           />
         </div>
 
