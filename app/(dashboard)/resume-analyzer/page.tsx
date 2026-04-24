@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'sonner';
@@ -11,6 +10,7 @@ import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Progress from '@/components/ui/Progress';
 import Badge from '@/components/ui/Badge';
+import { useState, useEffect } from 'react';
 
 export default function ResumeAnalyzerPage() {
   const [resumeText, setResumeText] = useState('');
@@ -21,6 +21,15 @@ export default function ResumeAnalyzerPage() {
   const [activeTab, setActiveTab] = useState<'paste' | 'upload'>('paste');
   const { profile } = useProfile();
 
+  useEffect(() => {
+  const imported = sessionStorage.getItem('imported_jd');
+  if (imported) {
+    setJobDescription(imported);
+    setActiveTab('paste');
+    sessionStorage.removeItem('imported_jd');
+    toast.success('Job description loaded from Import Jobs!');
+  }
+  }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: { 'text/plain': ['.txt'] },
     maxFiles: 1,
@@ -223,6 +232,7 @@ export default function ResumeAnalyzerPage() {
       profile.skills?.length ||
       profile.work_history?.length);
 
+      
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
