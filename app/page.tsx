@@ -149,7 +149,7 @@ export default function LandingPage() {
               <div className={`w-14 h-14 rounded-2xl ${f.iconBg} ${f.iconColor} flex items-center justify-center mb-5`}>
                 {f.icon}
               </div>
-              <h3 className="text-[17px] font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>
+              <h3 className="text-[17px] font-bold mb-2" style={{ color: f.title === 'Application Tracker' ? '#ff0000' : 'var(--color-text-primary)' }}>
                 {f.title}
               </h3>
               <p className="text-[13px] text-text-tertiary leading-relaxed">
