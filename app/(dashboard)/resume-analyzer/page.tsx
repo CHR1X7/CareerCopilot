@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'sonner';
 import { ResumeAnalysis } from '@/types';
-import { getScoreColor, getScoreBg, cn } from '@/lib/utils';
+import { useProfile } from '@/hooks/useProfile';
+import { getScoreColor, getScoreBg, cn, formatDate } from '@/lib/utils';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Progress from '@/components/ui/Progress';
@@ -18,6 +19,7 @@ export default function ResumeAnalyzerPage() {
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState<'up' | 'down' | null>(null);
   const [activeTab, setActiveTab] = useState<'paste' | 'upload'>('paste');
+  const { profile } = useProfile();
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: { 'text/plain': ['.txt'] },
@@ -30,6 +32,104 @@ export default function ResumeAnalyzerPage() {
       toast.success('Resume loaded!');
     },
   });
+
+  const autofillFromProfile = () => {
+    if (!profile) {
+      toast.error('No profile data found. Complete your profile first.');
+      return;
+    }
+
+    const sections: string[] = [];
+
+    // Header
+    if (profile.full_name) {
+      sections.push(profile.full_name.toUpperCase());
+    }
+
+    const contactParts: string[] = [];
+    if (profile.email) contactParts.push(profile.email);
+    if (profile.phone) contactParts.push(profile.phone);
+    if (profile.location) contactParts.push(profile.location);
+    if (contactParts.length > 0) {
+      sections.push(contactParts.join(' | '));
+    }
+
+    const linkParts: string[] = [];
+    if (profile.linkedin_url) linkParts.push(`LinkedIn: ${profile.linkedin_url}`);
+    if (profile.portfolio_url) linkParts.push(`Portfolio: ${profile.portfolio_url}`);
+    if (linkParts.length > 0) {
+      sections.push(linkParts.join(' | '));
+    }
+
+    // Summary
+    if (profile.summary) {
+      sections.push('');
+      sections.push('PROFESSIONAL SUMMARY');
+      sections.push('---');
+      sections.push(profile.summary);
+    }
+
+    // Skills
+    if (profile.skills?.length) {
+      sections.push('');
+      sections.push('SKILLS');
+      sections.push('---');
+      sections.push(profile.skills.join(', '));
+    }
+
+    // Work Experience
+    if (profile.work_history?.length) {
+      sections.push('');
+      sections.push('WORK EXPERIENCE');
+      sections.push('---');
+      profile.work_history.forEach((job: any) => {
+        const dateLine = `${formatDate(job.start_date)} – ${
+          job.current ? 'Present' : formatDate(job.end_date)
+        }`;
+        sections.push('');
+        sections.push(`${job.title} | ${job.company}`);
+        sections.push(`${dateLine}${job.location ? ' | ' + job.location : ''}`);
+        if (job.description) {
+          sections.push(job.description);
+        }
+      });
+    }
+
+    // Education
+    if (profile.education?.length) {
+      sections.push('');
+      sections.push('EDUCATION');
+      sections.push('---');
+      profile.education.forEach((edu: any) => {
+        sections.push('');
+        const degree = [edu.degree, edu.field].filter(Boolean).join(' in ');
+        sections.push(`${degree || 'Degree'} | ${edu.institution}`);
+        const dateLine = `${formatDate(edu.start_date)} – ${formatDate(edu.end_date)}`;
+        sections.push(dateLine + (edu.gpa ? ` | GPA: ${edu.gpa}` : ''));
+      });
+    }
+
+    // Certifications
+    if (profile.certifications?.length) {
+      sections.push('');
+      sections.push('CERTIFICATIONS');
+      sections.push('---');
+      profile.certifications.forEach((cert: any) => {
+        sections.push(`${cert.name} – ${cert.issuer} (${formatDate(cert.date)})`);
+      });
+    }
+
+    const resumeContent = sections.join('\n');
+
+    if (resumeContent.trim().length < 30) {
+      toast.error('Your profile is mostly empty. Add more details first.');
+      return;
+    }
+
+    setResumeText(resumeContent);
+    setActiveTab('paste');
+    toast.success('Profile data loaded as resume!');
+  };
 
   const handleAnalyze = async () => {
     if (!resumeText.trim() || !jobDescription.trim()) {
@@ -75,9 +175,29 @@ export default function ResumeAnalyzerPage() {
         toast.error('No analysis returned. Please try again.');
       }
     } catch (err: any) {
-      toast.error(`Network error: ${err?.message || 'Please check your connection'}`);
+      toast.error(
+        `Network error: ${err?.message || 'Please check your connection'}`
+      );
     } finally {
       setLoading(false);
+    }
+  };
+
+  const saveFeedback = async (rating: 'up' | 'down') => {
+    setFeedback(rating);
+    toast.success(rating === 'up' ? 'Thanks!' : "We'll improve this");
+    try {
+      await fetch('/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          feature: 'resume_analyzer',
+          rating,
+          context: { match_score: analysis?.match_score },
+        }),
+      });
+    } catch {
+      // non-fatal
     }
   };
 
@@ -87,11 +207,21 @@ export default function ResumeAnalyzerPage() {
     low: 'info',
   };
 
-  const getScoreVariant = (score: number): 'success' | 'warning' | 'danger' => {
+  const getScoreVariant = (
+    score: number
+  ): 'success' | 'warning' | 'danger' => {
     if (score >= 70) return 'success';
     if (score >= 40) return 'warning';
     return 'danger';
   };
+
+  // Check if profile has enough data
+  const profileHasData =
+    profile &&
+    (profile.full_name ||
+      profile.summary ||
+      profile.skills?.length ||
+      profile.work_history?.length);
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -114,36 +244,73 @@ export default function ResumeAnalyzerPage() {
             <span className="text-[13px] font-semibold text-text-primary">
               Your Resume
             </span>
-            <div className="flex items-center gap-1 p-0.5 bg-surface-200 rounded-lg border border-border-subtle">
-              <button
-                onClick={() => setActiveTab('paste')}
-                className={cn(
-                  'px-2.5 py-1 rounded-md text-[11px] font-medium transition-all',
-                  activeTab === 'paste'
-                    ? 'bg-surface-400 text-text-primary'
-                    : 'text-text-muted hover:text-text-secondary'
-                )}
-              >
-                Paste
-              </button>
-              <button
-                onClick={() => setActiveTab('upload')}
-                className={cn(
-                  'px-2.5 py-1 rounded-md text-[11px] font-medium transition-all',
-                  activeTab === 'upload'
-                    ? 'bg-surface-400 text-text-primary'
-                    : 'text-text-muted hover:text-text-secondary'
-                )}
-              >
-                Upload
-              </button>
+            <div className="flex items-center gap-2">
+              {/* Autofill Button */}
+              {profileHasData && (
+                <Button
+                  variant="outline"
+                  size="xs"
+                  onClick={autofillFromProfile}
+                  icon={
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <rect
+                        width="8"
+                        height="4"
+                        x="8"
+                        y="2"
+                        rx="1"
+                        ry="1"
+                      />
+                      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                      <path d="M9 14l2 2 4-4" />
+                    </svg>
+                  }
+                >
+                  Fill from Profile
+                </Button>
+              )}
+
+              {/* Tab Switcher */}
+              <div className="flex items-center gap-1 p-0.5 bg-surface-200 rounded-lg border border-border-subtle">
+                <button
+                  onClick={() => setActiveTab('paste')}
+                  className={cn(
+                    'px-2.5 py-1 rounded-md text-[11px] font-medium transition-all',
+                    activeTab === 'paste'
+                      ? 'bg-surface-400 text-text-primary'
+                      : 'text-text-muted hover:text-text-secondary'
+                  )}
+                >
+                  Paste
+                </button>
+                <button
+                  onClick={() => setActiveTab('upload')}
+                  className={cn(
+                    'px-2.5 py-1 rounded-md text-[11px] font-medium transition-all',
+                    activeTab === 'upload'
+                      ? 'bg-surface-400 text-text-primary'
+                      : 'text-text-muted hover:text-text-secondary'
+                  )}
+                >
+                  Upload
+                </button>
+              </div>
             </div>
           </div>
 
           {activeTab === 'paste' ? (
             <textarea
               className="input-field resize-none h-64 text-[13px]"
-              placeholder="Paste your full resume here..."
+              placeholder="Paste your full resume here or click 'Fill from Profile' above to auto-generate from your profile data..."
               value={resumeText}
               onChange={(e) => setResumeText(e.target.value)}
             />
@@ -193,14 +360,28 @@ export default function ResumeAnalyzerPage() {
             <span className="text-[11px] text-text-muted">
               {resumeText.length > 0 && `${resumeText.length} characters`}
             </span>
-            {resumeText && (
-              <button
-                onClick={() => setResumeText('')}
-                className="text-[11px] text-text-muted hover:text-accent-rose transition-colors"
-              >
-                Clear
-              </button>
-            )}
+            <div className="flex items-center gap-3">
+              {!profileHasData && (
+                <span className="text-[11px] text-text-muted">
+                  💡 Complete your{' '}
+                  <a
+                    href="/profile"
+                    className="text-brand-400 hover:underline"
+                  >
+                    profile
+                  </a>{' '}
+                  to use autofill
+                </span>
+              )}
+              {resumeText && (
+                <button
+                  onClick={() => setResumeText('')}
+                  className="text-[11px] text-text-muted hover:text-accent-rose transition-colors"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
           </div>
         </Card>
 
@@ -337,7 +518,9 @@ export default function ResumeAnalyzerPage() {
                           ? '#fbbf24'
                           : '#fb7185'
                       }
-                      strokeDasharray={`${(analysis.match_score / 100) * 339} 339`}
+                      strokeDasharray={`${
+                        (analysis.match_score / 100) * 339
+                      } 339`}
                       className="transition-all duration-1000"
                     />
                   </svg>
@@ -378,10 +561,7 @@ export default function ResumeAnalyzerPage() {
                   Was this helpful?
                 </span>
                 <button
-                  onClick={() => {
-                    setFeedback('up');
-                    toast.success('Thanks for your feedback!');
-                  }}
+                  onClick={() => saveFeedback('up')}
                   className={cn(
                     'w-7 h-7 rounded-lg flex items-center justify-center text-sm transition-all',
                     feedback === 'up'
@@ -392,10 +572,7 @@ export default function ResumeAnalyzerPage() {
                   👍
                 </button>
                 <button
-                  onClick={() => {
-                    setFeedback('down');
-                    toast.success("Thanks! We'll improve.");
-                  }}
+                  onClick={() => saveFeedback('down')}
                   className={cn(
                     'w-7 h-7 rounded-lg flex items-center justify-center text-sm transition-all',
                     feedback === 'down'
@@ -519,7 +696,9 @@ export default function ResumeAnalyzerPage() {
                   >
                     <div className="flex items-center gap-2 mb-2">
                       <Badge
-                        variant={priorityVariants[insight.priority] || 'info'}
+                        variant={
+                          priorityVariants[insight.priority] || 'info'
+                        }
                         size="sm"
                         dot
                       >

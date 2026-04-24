@@ -582,94 +582,331 @@ export default function ProfilePage() {
           )}
 
           {/* Preferences Tab */}
-          {activeTab === 'preferences' && (
-            <Card variant="default" padding="md">
-              <h3 className="text-[13px] font-semibold text-text-primary mb-5">
-                Your Job Preferences
-              </h3>
-              <div className="space-y-5">
-                <div>
-                  <label className="text-[11px] font-medium text-text-muted uppercase tracking-wider mb-2 block">
-                    Interested Roles
-                  </label>
-                  <div className="flex flex-wrap gap-1.5">
-                    {(formData.interested_roles || []).map((r: string) => (
-                      <Badge key={r} variant="brand" size="sm">{r}</Badge>
-                    ))}
-                    {!formData.interested_roles?.length && (
-                      <span className="text-[12px] text-text-muted">None selected</span>
-                    )}
-                  </div>
-                </div>
+{activeTab === 'preferences' && (
+  <div className="space-y-4">
+    {/* Roles */}
+    <Card variant="default" padding="md">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h3 className="text-[13px] font-semibold text-text-primary">
+            Interested Roles
+          </h3>
+          <p className="text-[11px] text-text-muted mt-0.5">
+            Select up to 5 roles
+          </p>
+        </div>
+        <Badge variant="brand" size="sm">
+          {(formData.interested_roles || []).length} / 5
+        </Badge>
+      </div>
+      <div className="flex flex-wrap gap-1.5">
+        {[
+          'Software Engineering', 'AI & Machine Learning', 'Data & Analytics',
+          'DevOps & Infrastructure', 'IT & Security', 'Backend Engineering',
+          'Frontend Engineering', 'Full Stack Engineering', 'Mobile Development',
+          'QA & Testing', 'Engineering Management', 'Cybersecurity',
+          'Product Management', 'UI/UX Design', 'Data Science',
+          'Machine Learning Engineering', 'Data Engineering', 'Cloud Architecture',
+        ].map((role) => {
+          const isSelected = (formData.interested_roles || []).includes(role);
+          const isDisabled = !isSelected && (formData.interested_roles || []).length >= 5;
+          return (
+            <button
+              key={role}
+              disabled={isDisabled}
+              onClick={() => {
+                const current = formData.interested_roles || [];
+                const updated = isSelected
+                  ? current.filter((r: string) => r !== role)
+                  : [...current, role];
+                update({ interested_roles: updated });
+              }}
+              className={cn(
+                'chip transition-all',
+                isSelected
+                  ? 'chip-selected'
+                  : isDisabled
+                  ? 'opacity-30 cursor-not-allowed chip-default'
+                  : 'chip-default'
+              )}
+            >
+              {isSelected && (
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+              )}
+              {role}
+            </button>
+          );
+        })}
+      </div>
+    </Card>
 
-                <div className="divider" />
+    {/* Locations */}
+    <Card variant="default" padding="md">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h3 className="text-[13px] font-semibold text-text-primary">
+            Preferred Locations
+          </h3>
+          <p className="text-[11px] text-text-muted mt-0.5">
+            Select all that apply
+          </p>
+        </div>
+        <Badge variant="info" size="sm">
+          {(formData.preferred_locations || []).length} selected
+        </Badge>
+      </div>
+      <div className="flex flex-wrap gap-1.5">
+        {[
+          'Remote in USA', 'San Francisco Bay Area', 'New York City', 'Seattle',
+          'Austin', 'Boston', 'Chicago', 'Los Angeles', 'Denver', 'Atlanta',
+          'Miami', 'Washington D.C.', 'Toronto', 'London', 'Remote (Worldwide)',
+        ].map((loc) => {
+          const isSelected = (formData.preferred_locations || []).includes(loc);
+          return (
+            <button
+              key={loc}
+              onClick={() => {
+                const current = formData.preferred_locations || [];
+                const updated = isSelected
+                  ? current.filter((l: string) => l !== loc)
+                  : [...current, loc];
+                update({ preferred_locations: updated });
+              }}
+              className={cn(
+                'chip',
+                isSelected
+                  ? 'bg-sky-500/10 border-sky-500/30 text-accent-sky'
+                  : 'chip-default'
+              )}
+            >
+              {loc}
+            </button>
+          );
+        })}
+      </div>
+    </Card>
 
-                <div>
-                  <label className="text-[11px] font-medium text-text-muted uppercase tracking-wider mb-2 block">
-                    Preferred Locations
-                  </label>
-                  <div className="flex flex-wrap gap-1.5">
-                    {(formData.preferred_locations || []).map((l: string) => (
-                      <Badge key={l} variant="info" size="sm">{l}</Badge>
-                    ))}
-                    {!formData.preferred_locations?.length && (
-                      <span className="text-[12px] text-text-muted">None selected</span>
-                    )}
-                  </div>
-                </div>
+    {/* Experience Level */}
+    <Card variant="default" padding="md">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h3 className="text-[13px] font-semibold text-text-primary">
+            Experience Level
+          </h3>
+          <p className="text-[11px] text-text-muted mt-0.5">
+            Select up to 2
+          </p>
+        </div>
+        <Badge variant="default" size="sm">
+          {(formData.experience_levels || []).length} / 2
+        </Badge>
+      </div>
+      <div className="grid grid-cols-3 gap-2">
+        {[
+          { id: 'internship', label: 'Internship' },
+          { id: 'entry_level', label: 'Entry Level' },
+          { id: 'junior', label: 'Junior (1-2 yrs)' },
+          { id: 'mid_level', label: 'Mid-level (3-4 yrs)' },
+          { id: 'senior', label: 'Senior (5-8 yrs)' },
+          { id: 'expert', label: 'Expert (9+ yrs)' },
+        ].map((level) => {
+          const isSelected = (formData.experience_levels || []).includes(level.id);
+          const isDisabled = !isSelected && (formData.experience_levels || []).length >= 2;
+          return (
+            <button
+              key={level.id}
+              disabled={isDisabled}
+              onClick={() => {
+                const current = formData.experience_levels || [];
+                const updated = isSelected
+                  ? current.filter((l: string) => l !== level.id)
+                  : [...current, level.id];
+                update({ experience_levels: updated });
+              }}
+              className={cn(
+                'py-2.5 px-3 rounded-xl border text-[12px] font-medium transition-all text-left',
+                isSelected
+                  ? 'bg-brand-500/10 border-brand-500/30 text-brand-300'
+                  : isDisabled
+                  ? 'opacity-30 cursor-not-allowed bg-surface-200 border-border-subtle text-text-muted'
+                  : 'bg-surface-200 border-border-subtle text-text-tertiary hover:border-border-default hover:text-text-primary'
+              )}
+            >
+              {level.label}
+            </button>
+          );
+        })}
+      </div>
+    </Card>
 
-                <div className="divider" />
+    {/* Company Size */}
+    <Card variant="default" padding="md">
+      <div className="mb-4">
+        <h3 className="text-[13px] font-semibold text-text-primary">
+          Company Size
+        </h3>
+        <p className="text-[11px] text-text-muted mt-0.5">
+          Select all that apply
+        </p>
+      </div>
+      <div className="grid grid-cols-4 gap-2">
+        {[
+          { id: '1-10', label: '1–10', sub: 'Startup' },
+          { id: '11-50', label: '11–50', sub: 'Small' },
+          { id: '51-200', label: '51–200', sub: 'Growing' },
+          { id: '201-500', label: '201–500', sub: 'Mid-size' },
+          { id: '501-1000', label: '501–1K', sub: 'Large' },
+          { id: '1001-5000', label: '1K–5K', sub: 'Enterprise' },
+          { id: '5001-10000', label: '5K–10K', sub: 'Big Corp' },
+          { id: '10001+', label: '10K+', sub: 'Fortune 500' },
+        ].map((size) => {
+          const isSelected = (formData.company_sizes || []).includes(size.id);
+          return (
+            <button
+              key={size.id}
+              onClick={() => {
+                const current = formData.company_sizes || [];
+                const updated = isSelected
+                  ? current.filter((s: string) => s !== size.id)
+                  : [...current, size.id];
+                update({ company_sizes: updated });
+              }}
+              className={cn(
+                'flex flex-col items-center py-3 rounded-xl border transition-all',
+                isSelected
+                  ? 'bg-brand-500/10 border-brand-500/30 text-brand-300'
+                  : 'bg-surface-200 border-border-subtle text-text-tertiary hover:border-border-default hover:text-text-primary'
+              )}
+            >
+              <span className="text-[13px] font-bold">{size.label}</span>
+              <span className="text-[10px] text-text-muted mt-0.5">{size.sub}</span>
+            </button>
+          );
+        })}
+      </div>
+    </Card>
 
-                <div>
-                  <label className="text-[11px] font-medium text-text-muted uppercase tracking-wider mb-2 block">
-                    Skills
-                  </label>
-                  <div className="flex flex-wrap gap-1.5">
-                    {(formData.skills || []).map((s: string) => (
-                      <Badge key={s} variant="success" size="sm">{s}</Badge>
-                    ))}
-                    {!formData.skills?.length && (
-                      <span className="text-[12px] text-text-muted">None selected</span>
-                    )}
-                  </div>
-                </div>
+    {/* Skills */}
+    <Card variant="default" padding="md">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h3 className="text-[13px] font-semibold text-text-primary">
+            Skills
+          </h3>
+          <p className="text-[11px] text-text-muted mt-0.5">
+            Select all that apply
+          </p>
+        </div>
+        <Badge variant="success" size="sm">
+          {(formData.skills || []).length} selected
+        </Badge>
+      </div>
+      <div className="flex flex-wrap gap-1.5">
+        {[
+          'Python', 'JavaScript', 'TypeScript', 'React', 'Node.js', 'SQL',
+          'Machine Learning', 'TensorFlow', 'PyTorch', 'Docker', 'Kubernetes',
+          'AWS', 'GCP', 'Azure', 'Git', 'REST APIs', 'GraphQL', 'PostgreSQL',
+          'MongoDB', 'Redis', 'Java', 'C++', 'Go', 'Swift', 'Kotlin',
+          'Next.js', 'Tailwind CSS', 'Data Analysis', 'Spark', 'NLP',
+          'LLMs', 'Prompt Engineering', 'Figma', 'Product Management', 'Agile',
+        ].map((skill) => {
+          const isSelected = (formData.skills || []).includes(skill);
+          return (
+            <button
+              key={skill}
+              onClick={() => {
+                const current = formData.skills || [];
+                const updated = isSelected
+                  ? current.filter((s: string) => s !== skill)
+                  : [...current, skill];
+                update({ skills: updated });
+              }}
+              className={cn(
+                'chip',
+                isSelected ? 'chip-success' : 'chip-default'
+              )}
+            >
+              {skill}
+            </button>
+          );
+        })}
+      </div>
+    </Card>
 
-                <div className="divider" />
+    {/* Minimum Salary */}
+    <Card variant="default" padding="md">
+      <div className="mb-4">
+        <h3 className="text-[13px] font-semibold text-text-primary">
+          Minimum Expected Salary
+        </h3>
+        <p className="text-[11px] text-text-muted mt-0.5">
+          Used only for job matching — never shared
+        </p>
+      </div>
+      <div className="text-center mb-6">
+        <span className="text-4xl font-bold text-text-primary">
+          ${((formData.min_salary || 0) / 1000).toFixed(0)}
+          <span className="text-xl text-text-muted font-normal">K</span>
+        </span>
+        <span className="text-text-muted text-sm ml-1">/year</span>
+      </div>
+      <input
+        type="range"
+        min={0}
+        max={300000}
+        step={5000}
+        value={formData.min_salary || 0}
+        onChange={(e) => update({ min_salary: Number(e.target.value) })}
+        className="w-full accent-brand-500 cursor-pointer"
+      />
+      <div className="flex justify-between text-[10px] text-text-muted mt-1">
+        <span>$0</span>
+        <span>$75K</span>
+        <span>$150K</span>
+        <span>$225K</span>
+        <span>$300K+</span>
+      </div>
+      <div className="flex flex-wrap gap-2 mt-4">
+        {[60000, 80000, 100000, 120000, 150000, 180000, 200000, 250000].map(
+          (preset) => (
+            <button
+              key={preset}
+              onClick={() => update({ min_salary: preset })}
+              className={cn(
+                'px-3 py-1.5 rounded-lg border text-[12px] font-medium transition-all',
+                formData.min_salary === preset
+                  ? 'bg-brand-500/10 border-brand-500/30 text-brand-300'
+                  : 'bg-surface-200 border-border-subtle text-text-muted hover:border-border-default'
+              )}
+            >
+              ${(preset / 1000).toFixed(0)}K
+            </button>
+          )
+        )}
+      </div>
+    </Card>
 
-                <div>
-                  <label className="text-[11px] font-medium text-text-muted uppercase tracking-wider mb-2 block">
-                    Minimum Salary
-                  </label>
-                  <span className="text-2xl font-bold text-text-primary">
-                    ${((formData.min_salary || 0) / 1000).toFixed(0)}
-                    <span className="text-base text-text-muted font-normal">K/yr</span>
-                  </span>
-                </div>
-
-                <div className="divider" />
-
-                <div>
-                  <label className="text-[11px] font-medium text-text-muted uppercase tracking-wider mb-2 block">
-                    Company Sizes
-                  </label>
-                  <div className="flex flex-wrap gap-1.5">
-                    {(formData.company_sizes || []).map((s: string) => (
-                      <Badge key={s} variant="default" size="sm">{s} employees</Badge>
-                    ))}
-                    {!formData.company_sizes?.length && (
-                      <span className="text-[12px] text-text-muted">No preference</span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="mt-4 p-4 bg-brand-500/5 border border-brand-500/10 rounded-xl">
-                  <p className="text-[12px] text-brand-400">
-                    To update preferences, go through onboarding again or contact support.
-                  </p>
-                </div>
-              </div>
-            </Card>
-          )}
+    {/* Save Button */}
+    <div className="flex justify-end">
+      <Button
+        onClick={handleSave}
+        loading={saving}
+        size="md"
+        icon={
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" />
+            <path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7" />
+            <path d="M7 3v4a1 1 0 0 0 1 1h7" />
+          </svg>
+        }
+      >
+        Save Preferences
+      </Button>
+    </div>
+  </div>
+)}
         </motion.div>
       </AnimatePresence>
 
