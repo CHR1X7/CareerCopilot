@@ -800,9 +800,9 @@ export default function AnimatedLanding() {
             <div className="w-6 h-6 gradient-brand rounded-lg flex items-center justify-center">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3"><path d="M12 2 2 7l10 5 10-5-10-5Z" /><path d="m2 17 10 5 10-5" /><path d="m2 12 10 5 10-5" /></svg>
             </div>
-            <span className="text-[12px] text-text-muted font-medium">© 2025 CareerCopilot</span>
+            <span className="text-[12px] text-text-muted font-medium">© 2026 CareerCopilot</span>
           </div>
-          <span className="text-[12px] text-text-muted">Built with AI, for humans ✨</span>
+          <span className="text-[12px] text-text-muted">Built By Christina Abdallah ✨</span>
         </div>
       </motion.div>
     </div>
